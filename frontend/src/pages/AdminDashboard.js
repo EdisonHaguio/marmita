@@ -461,13 +461,15 @@ function CustomersTab({ customers, onRefresh }) {
   return (
     <div className="space-y-6">
       <div className="flex justify-end">
+        <Button 
+          data-testid="add-customer-button" 
+          onClick={openNewDialog}
+          className="bg-primary hover:bg-primary-hover text-white"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Novo Cliente
+        </Button>
         <Dialog open={isOpen} onOpenChange={(open) => !open && closeDialog()}>
-          <DialogTrigger asChild>
-            <Button data-testid="add-customer-button" className="bg-primary hover:bg-primary-hover text-white">
-              <Plus className="w-4 h-4 mr-2" />
-              Novo Cliente
-            </Button>
-          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>{editingCustomer ? "Editar Cliente" : "Novo Cliente"}</DialogTitle>
