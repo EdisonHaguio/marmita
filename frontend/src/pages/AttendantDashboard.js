@@ -20,10 +20,12 @@ const ORDER_TYPES = [
 export default function AttendantDashboard({ user, onLogout }) {
   const [view, setView] = useState("new");
   const [products, setProducts] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [myOrders, setMyOrders] = useState([]);
   
   // Order form state
   const [customerName, setCustomerName] = useState("");
+  const [showCustomerSuggestions, setShowCustomerSuggestions] = useState(false);
   const [orderType, setOrderType] = useState("BALCAO");
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [size, setSize] = useState("M");
