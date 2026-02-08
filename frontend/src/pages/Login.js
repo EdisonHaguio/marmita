@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { axiosInstance } from "../App";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -10,6 +10,20 @@ export default function Login({ onLogin }) {
   const [password, setPassword] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [settings, setSettings] = useState(null);
+
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
+  const loadSettings = async () => {
+    try {
+      const response = await axiosInstance.get("/settings");
+      setSettings(response.data);
+    } catch (error) {
+      console.error("Erro ao carregar configurações");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
