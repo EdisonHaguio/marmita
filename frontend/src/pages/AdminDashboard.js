@@ -195,7 +195,7 @@ function ProductsTab({ products, onRefresh }) {
       await axiosInstance.post("/products", formData);
       toast.success("Produto criado!");
       setIsOpen(false);
-      setFormData({ name: "", type: "protein", price_p: 0, price_m: 0, price_g: 0 });
+      setFormData({ name: "", type: "protein", price_p: 0, price_m: 0, price_g: 0, price: 0 });
       onRefresh();
     } catch (error) {
       toast.error("Erro ao criar produto");
@@ -204,6 +204,7 @@ function ProductsTab({ products, onRefresh }) {
 
   const accompaniments = products.filter(p => p.type === "accompaniment");
   const proteins = products.filter(p => p.type === "protein");
+  const beverages = products.filter(p => p.type === "beverage");
 
   return (
     <div className="space-y-6">
