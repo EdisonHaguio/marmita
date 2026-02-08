@@ -232,6 +232,49 @@ async def delete_product(product_id: str):
         raise HTTPException(status_code=404, detail="Produto não encontrado")
     return {"message": "Produto removido"}
 
+@api_router.delete("/products/{product_id}/permanent")
+async def delete_product_permanent(product_id: str):
+    result = await db.products.delete_one({"id": product_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+    return {"message": "Produto excluído permanentemente"}
+
+@api_router.get("/customers", response_model=List[Customer])
+async def get_customers():
+    customers = await db.customers.find({}, {"_id": 0}).sort("name", 1).to_list(1000)
+    for c in customers:
+        if isinstance(c['created_at'], str):
+            c['created_at'] = datetime.fromisoformat(c['created_at'])
+    return customers
+
+@api_router.post("/customers", response_model=Customer)
+async def create_customer(customer_input: CustomerCreate):
+    customer_dict = customer_input.model_dump()
+    customer_obj = Customer(**customer_dict)
+    doc = customer_obj.model_dump()
+    doc['created_at'] = doc['created_at'].isoformat()
+    
+    await db.customers.insert_one(doc)
+    return customer_obj
+
+@api_router.patch("/customers/{customer_id}")
+async def update_customer(customer_id: str, update: CustomerUpdate):
+    update_dict = {k: v for k, v in update.model_dump().items() if v is not None}
+    if not update_dict:
+        raise HTTPException(status_code=400, detail="Nenhum campo para atualizar")
+    
+    result = await db.customers.update_one({"id": customer_id}, {"$set": update_dict})
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+    return {"message": "Cliente atualizado"}
+
+@api_router.delete("/customers/{customer_id}")
+async def delete_customer(customer_id: str):
+    result = await db.customers.delete_one({"id": customer_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Cliente não encontrado")
+    return {"message": "Cliente excluído"}
+
 @api_router.get("/orders", response_model=List[Order])
 async def get_orders(status: Optional[str] = None):
     query = {"status": status} if status else {}
