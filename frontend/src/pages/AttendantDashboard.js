@@ -437,6 +437,12 @@ export default function AttendantDashboard({ user, onLogout }) {
                     <p className="text-sm text-secondary-light">Mistura</p>
                     <p className="font-medium text-secondary">{selectedProtein || "-"}</p>
                   </div>
+                  {selectedBeverages.length > 0 && (
+                    <div className="pb-2 border-b border-orange-100">
+                      <p className="text-sm text-secondary-light">Bebidas</p>
+                      <p className="font-medium text-secondary">{selectedBeverages.join(", ")}</p>
+                    </div>
+                  )}
                   {observations && (
                     <div className="pb-2 border-b border-orange-100">
                       <p className="text-sm text-secondary-light">Observações</p>
