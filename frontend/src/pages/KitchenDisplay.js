@@ -54,7 +54,7 @@ export default function KitchenDisplay() {
     <div className="min-h-screen bg-gradient-to-br from-[#FFF8F0] to-[#FFE0B2] p-6">
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-8">
-        <div className="bg-white rounded-2xl p-6 shadow-floating border-b-4 border-primary">
+        <div className="bg-white rounded-2xl p-6 shadow-floating border-b-4 border-primary relative">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="bg-primary rounded-full p-3">
@@ -65,15 +65,21 @@ export default function KitchenDisplay() {
                 <p className="text-secondary-light">Pedidos em Tempo Real</p>
               </div>
             </div>
-            <Button
-              data-testid="refresh-orders-button"
-              onClick={loadOrders}
-              variant="outline"
-              className="border-primary text-primary hover:bg-primary hover:text-white"
-            >
-              <RefreshCw className="w-5 h-5 mr-2" />
-              Atualizar
-            </Button>
+            <div className="flex items-center gap-4">
+              <div className="text-right hidden sm:block">
+                <p className="text-xs text-secondary-light">Suporte: Japão Informática</p>
+                <p className="text-xs text-secondary-light">(19) 99813-2220</p>
+              </div>
+              <Button
+                data-testid="refresh-orders-button"
+                onClick={loadOrders}
+                variant="outline"
+                className="border-primary text-primary hover:bg-primary hover:text-white"
+              >
+                <RefreshCw className="w-5 h-5 mr-2" />
+                Atualizar
+              </Button>
+            </div>
           </div>
         </div>
       </div>
