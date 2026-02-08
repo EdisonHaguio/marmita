@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { axiosInstance } from "../App";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
+import { Textarea } from "../components/ui/textarea";
 import { toast } from "sonner";
 import { LogOut, Users, UtensilsCrossed, Settings, Plus, Trash2, Eye, EyeOff } from "lucide-react";
 import {
