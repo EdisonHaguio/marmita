@@ -162,9 +162,31 @@ export default function AdminDashboard({ user, onLogout }) {
   );
 }
 
-function ProductsTab({ products, onToggle, onRefresh }) {
+function ProductsTab({ products, onRefresh }) {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", type: "protein", price_p: 0, price_m: 0, price_g: 0 });
+
+  const toggleProductActive = async (productId, currentActive) => {
+    try {
+      await axiosInstance.patch(`/products/${productId}`, { active: !currentActive });
+      toast.success(currentActive ? "Produto desativado" : "Produto ativado");
+      onRefresh();
+    } catch (error) {
+      toast.error("Erro ao atualizar produto");
+    }
+  };
+
+  const deleteProductPermanent = async (productId, productName) => {
+    if (!window.confirm(`Tem certeza que deseja EXCLUIR PERMANENTEMENTE "${productName}"? Esta ação não pode ser desfeita!`)) return;
+    
+    try {
+      await axiosInstance.delete(`/products/${productId}/permanent`);
+      toast.success("Produto excluído permanentemente");
+      onRefresh();
+    } catch (error) {
+      toast.error("Erro ao excluir produto");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -271,15 +293,26 @@ function ProductsTab({ products, onToggle, onRefresh }) {
                   P: R$ {p.price_p.toFixed(2)} | M: R$ {p.price_m.toFixed(2)} | G: R$ {p.price_g.toFixed(2)}
                 </p>
               </div>
-              <Button
-                data-testid={`toggle-product-${p.id}`}
-                onClick={() => onToggle(p.id, p.active)}
-                variant="outline"
-                size="sm"
-                className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
-              >
-                {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  data-testid={`toggle-product-${p.id}`}
+                  onClick={() => toggleProductActive(p.id, p.active)}
+                  variant="outline"
+                  size="sm"
+                  className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                >
+                  {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                </Button>
+                <Button
+                  data-testid={`delete-product-${p.id}`}
+                  onClick={() => deleteProductPermanent(p.id, p.name)}
+                  variant="outline"
+                  size="sm"
+                  className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
           ))}
         </div>
@@ -291,15 +324,26 @@ function ProductsTab({ products, onToggle, onRefresh }) {
           {accompaniments.map((p) => (
             <div key={p.id} data-testid={`accompaniment-item-${p.id}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
               <p className="font-semibold text-secondary">{p.name}</p>
-              <Button
-                data-testid={`toggle-accompaniment-${p.id}`}
-                onClick={() => onToggle(p.id, p.active)}
-                variant="outline"
-                size="sm"
-                className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
-              >
-                {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  data-testid={`toggle-accompaniment-${p.id}`}
+                  onClick={() => toggleProductActive(p.id, p.active)}
+                  variant="outline"
+                  size="sm"
+                  className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                >
+                  {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                </Button>
+                <Button
+                  data-testid={`delete-accompaniment-${p.id}`}
+                  onClick={() => deleteProductPermanent(p.id, p.name)}
+                  variant="outline"
+                  size="sm"
+                  className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
           ))}
         </div>
