@@ -123,6 +123,10 @@ def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
 
 # ===== ROUTES =====
+@api_router.get("/")
+async def root():
+    return {"message": "Dona Guedes API", "status": "online"}
+
 @api_router.post("/auth/login")
 async def login(req: LoginRequest):
     user_dict = await db.users.find_one({"code": req.code, "active": True}, {"_id": 0})
