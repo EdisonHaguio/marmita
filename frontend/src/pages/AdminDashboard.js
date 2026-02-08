@@ -102,11 +102,11 @@ export default function AdminDashboard({ user, onLogout }) {
 
       {/* Tabs */}
       <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-2 mb-6 overflow-x-auto">
           <Button
             data-testid="products-tab"
             onClick={() => setView("products")}
-            className={`flex-1 h-12 rounded-xl transition-all ${
+            className={`flex-1 h-12 rounded-xl transition-all whitespace-nowrap ${
               view === "products"
                 ? "bg-primary text-white shadow-lg"
                 : "bg-white text-secondary hover:bg-orange-50"
@@ -116,9 +116,21 @@ export default function AdminDashboard({ user, onLogout }) {
             Produtos
           </Button>
           <Button
+            data-testid="customers-tab"
+            onClick={() => setView("customers")}
+            className={`flex-1 h-12 rounded-xl transition-all whitespace-nowrap ${
+              view === "customers"
+                ? "bg-primary text-white shadow-lg"
+                : "bg-white text-secondary hover:bg-orange-50"
+            }`}
+          >
+            <Users className="w-5 h-5 mr-2" />
+            Clientes
+          </Button>
+          <Button
             data-testid="users-tab"
             onClick={() => setView("users")}
-            className={`flex-1 h-12 rounded-xl transition-all ${
+            className={`flex-1 h-12 rounded-xl transition-all whitespace-nowrap ${
               view === "users"
                 ? "bg-primary text-white shadow-lg"
                 : "bg-white text-secondary hover:bg-orange-50"
@@ -130,7 +142,7 @@ export default function AdminDashboard({ user, onLogout }) {
           <Button
             data-testid="settings-tab"
             onClick={() => setView("settings")}
-            className={`flex-1 h-12 rounded-xl transition-all ${
+            className={`flex-1 h-12 rounded-xl transition-all whitespace-nowrap ${
               view === "settings"
                 ? "bg-primary text-white shadow-lg"
                 : "bg-white text-secondary hover:bg-orange-50"
@@ -141,7 +153,8 @@ export default function AdminDashboard({ user, onLogout }) {
           </Button>
         </div>
 
-        {view === "products" && <ProductsTab products={products} onToggle={toggleProductActive} onRefresh={loadData} />}
+        {view === "products" && <ProductsTab products={products} onRefresh={loadData} />}
+        {view === "customers" && <CustomersTab customers={customers} onRefresh={loadData} />}
         {view === "users" && <UsersTab users={users} onDelete={deleteUser} onRefresh={loadData} />}
         {view === "settings" && <SettingsTab settings={settings} setSettings={setSettings} onSubmit={updateSettings} loading={loading} />}
       </div>
