@@ -1,52 +1,83 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import axios from "axios";
+import Login from "./pages/Login";
+import AttendantDashboard from "./pages/AttendantDashboard";
+import KitchenDisplay from "./pages/KitchenDisplay";
+import AdminDashboard from "./pages/AdminDashboard";
+import { Toaster } from "./components/ui/sonner";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+export const API = `${BACKEND_URL}/api`;
 
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
-
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
-  return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
-};
+export const axiosInstance = axios.create({
+  baseURL: API,
+});
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+  };
+
   return (
-    <div className="App">
+    <div className="App min-h-screen">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
+          <Route
+            path="/"
+            element={
+              !user ? (
+                <Login onLogin={handleLogin} />
+              ) : user.role === "admin" ? (
+                <Navigate to="/admin" />
+              ) : (
+                <Navigate to="/atendente" />
+              )
+            }
+          />
+          <Route
+            path="/atendente"
+            element={
+              user && user.role === "attendant" ? (
+                <AttendantDashboard user={user} onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route
+            path="/cozinha"
+            element={<KitchenDisplay />}
+          />
+          <Route
+            path="/admin"
+            element={
+              user && user.role === "admin" ? (
+                <AdminDashboard user={user} onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
         </Routes>
       </BrowserRouter>
+      <Toaster position="top-center" />
     </div>
   );
 }
