@@ -88,6 +88,7 @@ class ProductUpdate(BaseModel):
     price_p: Optional[float] = None
     price_m: Optional[float] = None
     price_g: Optional[float] = None
+    price: Optional[float] = None
     active: Optional[bool] = None
 
 class Order(BaseModel):
