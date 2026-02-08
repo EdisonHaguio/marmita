@@ -76,6 +76,18 @@ export default function AttendantDashboard({ user, onLogout }) {
     );
   };
 
+  const selectCustomer = (customer) => {
+    setCustomerName(customer.name);
+    if (customer.address) {
+      setDeliveryAddress(customer.address);
+    }
+    setShowCustomerSuggestions(false);
+  };
+
+  const filteredCustomers = customers.filter(c => 
+    c.name.toLowerCase().includes(customerName.toLowerCase())
+  ).slice(0, 5);
+
   const calculateTotal = () => {
     const proteinProduct = products.find(p => p.name === selectedProtein);
     if (!proteinProduct) return 0;
