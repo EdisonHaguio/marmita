@@ -179,6 +179,7 @@ export default function AttendantDashboard({ user, onLogout }) {
 
   const accompaniments = products.filter(p => p.type === "accompaniment");
   const proteins = products.filter(p => p.type === "protein");
+  const beverages = products.filter(p => p.type === "beverage");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FFF8F0] to-[#FFE0B2]">
