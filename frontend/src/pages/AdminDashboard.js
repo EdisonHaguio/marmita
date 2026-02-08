@@ -352,6 +352,146 @@ function ProductsTab({ products, onRefresh }) {
   );
 }
 
+function CustomersTab({ customers, onRefresh }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [editingCustomer, setEditingCustomer] = useState(null);
+  const [formData, setFormData] = useState({ name: "", phone: "", address: "" });
+
+  const openEditDialog = (customer) => {
+    setEditingCustomer(customer);
+    setFormData({ name: customer.name, phone: customer.phone || "", address: customer.address || "" });
+    setIsOpen(true);
+  };
+
+  const closeDialog = () => {
+    setIsOpen(false);
+    setEditingCustomer(null);
+    setFormData({ name: "", phone: "", address: "" });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (editingCustomer) {
+        await axiosInstance.patch(`/customers/${editingCustomer.id}`, formData);
+        toast.success("Cliente atualizado!");
+      } else {
+        await axiosInstance.post("/customers", formData);
+        toast.success("Cliente criado!");
+      }
+      closeDialog();
+      onRefresh();
+    } catch (error) {
+      toast.error("Erro ao salvar cliente");
+    }
+  };
+
+  const deleteCustomer = async (customerId, customerName) => {
+    if (!window.confirm(`Tem certeza que deseja excluir o cliente "${customerName}"?`)) return;
+    
+    try {
+      await axiosInstance.delete(`/customers/${customerId}`);
+      toast.success("Cliente excluído");
+      onRefresh();
+    } catch (error) {
+      toast.error("Erro ao excluir cliente");
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-end">
+        <Dialog open={isOpen} onOpenChange={(open) => !open && closeDialog()}>
+          <DialogTrigger asChild>
+            <Button data-testid="add-customer-button" className="bg-primary hover:bg-primary-hover text-white">
+              <Plus className="w-4 h-4 mr-2" />
+              Novo Cliente
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{editingCustomer ? "Editar Cliente" : "Novo Cliente"}</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Nome *</label>
+                <Input
+                  data-testid="customer-name-input"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="João Silva"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Telefone</label>
+                <Input
+                  data-testid="customer-phone-input"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  placeholder="(11) 99999-9999"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Endereço</label>
+                <Textarea
+                  data-testid="customer-address-input"
+                  value={formData.address}
+                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  placeholder="Rua, número, bairro"
+                  className="min-h-20"
+                />
+              </div>
+              <Button data-testid="submit-customer-button" type="submit" className="w-full bg-primary hover:bg-primary-hover text-white">
+                {editingCustomer ? "Atualizar Cliente" : "Criar Cliente"}
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">Clientes Cadastrados</h3>
+        {customers.length === 0 ? (
+          <p className="text-center text-secondary-light py-8">Nenhum cliente cadastrado</p>
+        ) : (
+          <div className="space-y-2">
+            {customers.map((c) => (
+              <div key={c.id} data-testid={`customer-item-${c.id}`} className="flex items-start justify-between p-4 border border-orange-100 rounded-xl hover:border-primary transition-all">
+                <div className="flex-1">
+                  <p className="font-semibold text-secondary">{c.name}</p>
+                  {c.phone && <p className="text-sm text-secondary-light">📞 {c.phone}</p>}
+                  {c.address && <p className="text-sm text-secondary-light">📍 {c.address}</p>}
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    data-testid={`edit-customer-${c.id}`}
+                    onClick={() => openEditDialog(c)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-blue text-accent-blue hover:bg-accent-blue hover:text-white"
+                  >
+                    <Settings className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    data-testid={`delete-customer-${c.id}`}
+                    onClick={() => deleteCustomer(c.id, c.name)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function UsersTab({ users, onDelete, onRefresh }) {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({ code: "", name: "" });
