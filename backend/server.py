@@ -67,10 +67,11 @@ class Product(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
-    type: str  # accompaniment or protein
+    type: str  # accompaniment, protein, or beverage
     price_p: Optional[float] = 0
     price_m: Optional[float] = 0
     price_g: Optional[float] = 0
+    price: Optional[float] = 0  # For beverages (fixed price)
     active: bool = True
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -80,6 +81,7 @@ class ProductCreate(BaseModel):
     price_p: Optional[float] = 0
     price_m: Optional[float] = 0
     price_g: Optional[float] = 0
+    price: Optional[float] = 0
 
 class ProductUpdate(BaseModel):
     name: Optional[str] = None
