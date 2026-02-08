@@ -240,6 +240,7 @@ function ProductsTab({ products, onRefresh }) {
                 >
                   <option value="accompaniment">Acompanhamento</option>
                   <option value="protein">Mistura (Proteína)</option>
+                  <option value="beverage">Bebida</option>
                 </select>
               </div>
               {formData.type === "protein" && (
@@ -274,6 +275,19 @@ function ProductsTab({ products, onRefresh }) {
                       onChange={(e) => setFormData({ ...formData, price_g: parseFloat(e.target.value) })}
                     />
                   </div>
+                </div>
+              )}
+              {formData.type === "beverage" && (
+                <div>
+                  <label className="block text-sm font-medium mb-2">Preço (fixo)</label>
+                  <Input
+                    data-testid="product-price-input"
+                    type="number"
+                    step="0.01"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                    placeholder="5.00"
+                  />
                 </div>
               )}
               <Button data-testid="submit-product-button" type="submit" className="w-full bg-primary hover:bg-primary-hover text-white">
