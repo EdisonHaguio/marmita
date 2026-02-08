@@ -36,6 +36,7 @@ export default function AttendantDashboard({ user, onLogout }) {
 
   useEffect(() => {
     loadProducts();
+    loadCustomers();
     if (view === "orders") {
       loadMyOrders();
     }
@@ -47,6 +48,15 @@ export default function AttendantDashboard({ user, onLogout }) {
       setProducts(response.data);
     } catch (error) {
       toast.error("Erro ao carregar produtos");
+    }
+  };
+
+  const loadCustomers = async () => {
+    try {
+      const response = await axiosInstance.get("/customers");
+      setCustomers(response.data);
+    } catch (error) {
+      console.error("Erro ao carregar clientes");
     }
   };
 
