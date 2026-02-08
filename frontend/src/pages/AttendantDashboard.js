@@ -157,6 +157,7 @@ export default function AttendantDashboard({ user, onLogout }) {
       setDeliveryAddress("");
       setSelectedAccompaniments([]);
       setSelectedProtein("");
+      setSelectedBeverages([]);
       setObservations("");
       setOrderType("BALCAO");
       setSize("M");
