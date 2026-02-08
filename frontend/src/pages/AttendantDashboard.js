@@ -31,6 +31,7 @@ export default function AttendantDashboard({ user, onLogout }) {
   const [size, setSize] = useState("M");
   const [selectedAccompaniments, setSelectedAccompaniments] = useState([]);
   const [selectedProtein, setSelectedProtein] = useState("");
+  const [selectedBeverages, setSelectedBeverages] = useState([]);
   const [observations, setObservations] = useState("");
   const [loading, setLoading] = useState(false);
 
