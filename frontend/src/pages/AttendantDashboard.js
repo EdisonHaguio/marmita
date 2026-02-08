@@ -219,15 +219,35 @@ export default function AttendantDashboard({ user, onLogout }) {
               <div className="bg-white rounded-2xl p-6 shadow-warm">
                 <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">Informações do Cliente</h2>
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
+                  <div className="relative">
                     <label className="block text-sm font-medium text-secondary mb-2">Nome do Cliente *</label>
                     <Input
                       data-testid="customer-name-input"
                       value={customerName}
-                      onChange={(e) => setCustomerName(e.target.value)}
-                      placeholder="Nome do cliente"
+                      onChange={(e) => {
+                        setCustomerName(e.target.value);
+                        setShowCustomerSuggestions(e.target.value.length > 0);
+                      }}
+                      onFocus={() => setShowCustomerSuggestions(customerName.length > 0)}
+                      placeholder="Digite o nome"
                       className="h-12 border-orange-200"
                     />
+                    {showCustomerSuggestions && filteredCustomers.length > 0 && (
+                      <div className="absolute z-10 w-full mt-1 bg-white border border-orange-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                        {filteredCustomers.map((customer) => (
+                          <button
+                            key={customer.id}
+                            type="button"
+                            onClick={() => selectCustomer(customer)}
+                            className="w-full text-left px-4 py-2 hover:bg-orange-50 transition-colors border-b border-orange-100 last:border-b-0"
+                          >
+                            <p className="font-medium text-secondary">{customer.name}</p>
+                            {customer.phone && <p className="text-xs text-secondary-light">📞 {customer.phone}</p>}
+                            {customer.address && <p className="text-xs text-secondary-light">📍 {customer.address}</p>}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-secondary mb-2">Tipo de Pedido *</label>
