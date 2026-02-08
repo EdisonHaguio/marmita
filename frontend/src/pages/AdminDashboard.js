@@ -16,6 +16,7 @@ export default function AdminDashboard({ user, onLogout }) {
   const [view, setView] = useState("products");
   const [products, setProducts] = useState([]);
   const [users, setUsers] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [settings, setSettings] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -31,6 +32,9 @@ export default function AdminDashboard({ user, onLogout }) {
       } else if (view === "users") {
         const res = await axiosInstance.get("/users");
         setUsers(res.data);
+      } else if (view === "customers") {
+        const res = await axiosInstance.get("/customers");
+        setCustomers(res.data);
       } else if (view === "settings") {
         const res = await axiosInstance.get("/settings");
         setSettings(res.data);
