@@ -411,6 +411,12 @@ function CustomersTab({ customers, onRefresh }) {
   const [editingCustomer, setEditingCustomer] = useState(null);
   const [formData, setFormData] = useState({ name: "", phone: "", address: "" });
 
+  const openNewDialog = () => {
+    setEditingCustomer(null);
+    setFormData({ name: "", phone: "", address: "" });
+    setIsOpen(true);
+  };
+
   const openEditDialog = (customer) => {
     setEditingCustomer(customer);
     setFormData({ name: customer.name, phone: customer.phone || "", address: customer.address || "" });
