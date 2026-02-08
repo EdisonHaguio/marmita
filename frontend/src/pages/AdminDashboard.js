@@ -165,7 +165,7 @@ export default function AdminDashboard({ user, onLogout }) {
 
 function ProductsTab({ products, onRefresh }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: "", type: "protein", price_p: 0, price_m: 0, price_g: 0 });
+  const [formData, setFormData] = useState({ name: "", type: "protein", price_p: 0, price_m: 0, price_g: 0, price: 0 });
 
   const toggleProductActive = async (productId, currentActive) => {
     try {
