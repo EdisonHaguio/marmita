@@ -131,6 +131,7 @@ class Settings(BaseModel):
     id: str = "settings"
     store_name: str = "Dona Guedes"
     store_address: str = ""
+    store_logo_url: Optional[str] = None
     printer_ip: Optional[str] = None
     printer_port: int = 9100
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -138,6 +139,7 @@ class Settings(BaseModel):
 class SettingsUpdate(BaseModel):
     store_name: Optional[str] = None
     store_address: Optional[str] = None
+    store_logo_url: Optional[str] = None
     printer_ip: Optional[str] = None
     printer_port: Optional[int] = None
 
