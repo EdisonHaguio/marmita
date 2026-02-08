@@ -100,7 +100,17 @@ export default function AttendantDashboard({ user, onLogout }) {
     if (!proteinProduct) return 0;
     
     const priceKey = `price_${size.toLowerCase()}`;
-    return proteinProduct[priceKey] || 0;
+    let total = proteinProduct[priceKey] || 0;
+    
+    // Add beverage prices
+    selectedBeverages.forEach(bevName => {
+      const beverage = products.find(p => p.name === bevName && p.type === "beverage");
+      if (beverage) {
+        total += beverage.price || 0;
+      }
+    });
+    
+    return total;
   };
 
   const handleCreateOrder = async () => {
