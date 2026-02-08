@@ -77,6 +77,12 @@ export default function AttendantDashboard({ user, onLogout }) {
     );
   };
 
+  const toggleBeverage = (name) => {
+    setSelectedBeverages(prev => 
+      prev.includes(name) ? prev.filter(b => b !== name) : [...prev, name]
+    );
+  };
+
   const selectCustomer = (customer) => {
     setCustomerName(customer.name);
     if (customer.address) {
