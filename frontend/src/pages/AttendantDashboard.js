@@ -184,21 +184,27 @@ export default function AttendantDashboard({ user, onLogout }) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FFF8F0] to-[#FFE0B2]">
       {/* Header */}
-      <header className="bg-white shadow-md border-b-4 border-primary">
+      <header className="bg-white shadow-md border-b-4 border-primary relative">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-outfit font-bold text-secondary">Dona Guedes</h1>
             <p className="text-sm text-secondary-light">Olá, {user.name} (#{user.code})</p>
           </div>
-          <Button
-            data-testid="logout-button"
-            onClick={onLogout}
-            variant="outline"
-            className="border-secondary text-secondary hover:bg-secondary hover:text-white"
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            Sair
-          </Button>
+          <div className="flex items-center gap-4">
+            <div className="text-right hidden sm:block">
+              <p className="text-xs text-secondary-light">Suporte: Japão Informática</p>
+              <p className="text-xs text-secondary-light">(19) 99813-2220</p>
+            </div>
+            <Button
+              data-testid="logout-button"
+              onClick={onLogout}
+              variant="outline"
+              className="border-secondary text-secondary hover:bg-secondary hover:text-white"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Sair
+            </Button>
+          </div>
         </div>
       </header>
 
