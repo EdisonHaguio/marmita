@@ -45,14 +45,37 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #FFF8F0 0%, #FFE0B2 100%)' }}>
+    <div className="min-h-screen flex items-center justify-center relative" style={{ background: 'linear-gradient(135deg, #FFF8F0 0%, #FFE0B2 100%)' }}>
+      {/* Logo Japão Informática - Canto superior direito */}
+      <div className="absolute top-4 right-4 flex flex-col items-end gap-1">
+        <img 
+          src="https://customer-assets.emergentagent.com/job_marmita-system/artifacts/8dh5t1su_WhatsApp%20Image%202026-02-07%20at%2015.47.35.jpeg" 
+          alt="Japão Informática" 
+          className="h-12 object-contain opacity-60"
+        />
+        <p className="text-xs text-secondary-light">Japão Informática</p>
+        <p className="text-xs text-secondary-light">(19) 99813-2220</p>
+      </div>
+
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-floating p-8">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-primary rounded-full mb-4">
-              <UtensilsCrossed className="w-10 h-10 text-white" />
-            </div>
-            <h1 className="text-4xl font-outfit font-bold text-secondary mb-2">Dona Guedes</h1>
+            {settings?.store_logo_url ? (
+              <div className="flex justify-center mb-4">
+                <img 
+                  src={settings.store_logo_url} 
+                  alt={settings.store_name || "Logo"}
+                  className="h-20 object-contain"
+                />
+              </div>
+            ) : (
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-primary rounded-full mb-4">
+                <UtensilsCrossed className="w-10 h-10 text-white" />
+              </div>
+            )}
+            <h1 className="text-4xl font-outfit font-bold text-secondary mb-2">
+              {settings?.store_name || "Dona Guedes"}
+            </h1>
             <p className="text-secondary-light">Sistema de Pedidos</p>
           </div>
 
