@@ -664,6 +664,20 @@ function SettingsTab({ settings, setSettings, onSubmit, loading }) {
           />
         </div>
         <div>
+          <label className="block text-sm font-medium text-secondary mb-2">URL da Logo (opcional)</label>
+          <Input
+            data-testid="settings-store-logo-input"
+            value={settings.store_logo_url || ""}
+            onChange={(e) => setSettings({ ...settings, store_logo_url: e.target.value })}
+            placeholder="https://exemplo.com/logo.png"
+          />
+          {settings.store_logo_url && (
+            <div className="mt-2">
+              <img src={settings.store_logo_url} alt="Logo" className="h-16 object-contain" />
+            </div>
+          )}
+        </div>
+        <div>
           <label className="block text-sm font-medium text-secondary mb-2">IP da Impressora (Tanca T650)</label>
           <Input
             data-testid="settings-printer-ip-input"
