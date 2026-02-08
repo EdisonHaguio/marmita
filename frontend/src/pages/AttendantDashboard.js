@@ -373,6 +373,30 @@ export default function AttendantDashboard({ user, onLogout }) {
                 </div>
               </div>
 
+              {/* Beverages */}
+              {beverages.length > 0 && (
+                <div className="bg-white rounded-2xl p-6 shadow-warm">
+                  <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">Bebidas (Opcional)</h2>
+                  <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {beverages.map((beverage) => (
+                      <button
+                        key={beverage.id}
+                        data-testid={`beverage-${beverage.name.toLowerCase().replace(/\s/g, '-')}`}
+                        onClick={() => toggleBeverage(beverage.name)}
+                        className={`h-16 rounded-xl border-2 transition-all flex items-center justify-between px-4 font-medium ${
+                          selectedBeverages.includes(beverage.name)
+                            ? "border-accent-blue bg-accent-blue text-white shadow-lg"
+                            : "border-orange-200 bg-white text-secondary hover:border-primary"
+                        }`}
+                      >
+                        <span>{beverage.name}</span>
+                        <span className="text-sm opacity-80">+ R$ {(beverage.price || 0).toFixed(2)}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Observations */}
               <div className="bg-white rounded-2xl p-6 shadow-warm">
                 <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">Observações</h2>
