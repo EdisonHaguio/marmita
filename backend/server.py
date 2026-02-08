@@ -339,6 +339,9 @@ async def print_order(order_id: str):
     printer.text(f"Acompanhamentos: {', '.join(order_dict['accompaniments'])}\n")
     printer.text(f"Mistura: {order_dict['protein']}\n")
     
+    if order_dict.get('beverages') and len(order_dict['beverages']) > 0:
+        printer.text(f"Bebidas: {', '.join(order_dict['beverages'])}\n")
+    
     if order_dict.get('observations'):
         printer.text(f"Obs: {order_dict['observations']}\n")
     
