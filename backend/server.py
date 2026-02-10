@@ -101,8 +101,8 @@ class Order(BaseModel):
     size: str  # P, M, G
     accompaniments: List[str] = []  # List of accompaniment names
     protein: str  # Protein name
+    salads: List[str] = []  # List of salad names
     beverages: List[str] = []  # List of beverage names
-    salad_quantity: Optional[int] = 1  # 1, 2, or 3 salads
     observations: Optional[str] = None
     total_price: float
     status: str = "pending"  # pending, preparing, ready, delivered
@@ -118,8 +118,8 @@ class OrderCreate(BaseModel):
     size: str
     accompaniments: List[str]
     protein: str
+    salads: List[str] = []
     beverages: List[str] = []
-    salad_quantity: Optional[int] = 1
     observations: Optional[str] = None
     total_price: float
     attendant_code: str
