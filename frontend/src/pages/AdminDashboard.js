@@ -424,6 +424,44 @@ function ProductsTab({ products, onRefresh }) {
           )}
         </div>
       </div>
+
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">Saladas</h3>
+        <div className="space-y-2">
+          {salads.length === 0 ? (
+            <p className="text-center text-secondary-light py-4">Nenhuma salada cadastrada</p>
+          ) : (
+            salads.map((p) => (
+              <div key={p.id} data-testid={`salad-item-${p.id}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
+                <div>
+                  <p className="font-semibold text-secondary">{p.name}</p>
+                  <p className="text-sm text-secondary-light">R$ {(p.price || 0).toFixed(2)}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    data-testid={`toggle-salad-${p.id}`}
+                    onClick={() => toggleProductActive(p.id, p.active)}
+                    variant="outline"
+                    size="sm"
+                    className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                  >
+                    {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    data-testid={`delete-salad-${p.id}`}
+                    onClick={() => deleteProductPermanent(p.id, p.name)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </div>
   );
 }
