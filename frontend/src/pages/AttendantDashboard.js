@@ -167,8 +167,8 @@ export default function AttendantDashboard({ user, onLogout }) {
   };
 
   const handleCreateOrder = async () => {
-    if (!customerName || !selectedProtein || selectedAccompaniments.length === 0) {
-      toast.error("Preencha todos os campos obrigatórios");
+    if (!customerName || cartItems.length === 0) {
+      toast.error("Adicione pelo menos uma marmita ao pedido");
       return;
     }
 
@@ -184,9 +184,7 @@ export default function AttendantDashboard({ user, onLogout }) {
         customer_name: customerName,
         order_type: orderType,
         delivery_address: orderType === "ENTREGA" ? deliveryAddress : null,
-        size,
-        accompaniments: selectedAccompaniments,
-        protein: selectedProtein,
+        items: cartItems,
         salads: selectedSalads,
         beverages: selectedBeverages,
         observations,
