@@ -214,13 +214,15 @@ function ProductsTab({ products, onRefresh }) {
   return (
     <div className="space-y-6">
       <div className="flex justify-end">
+        <Button 
+          data-testid="add-product-button" 
+          onClick={() => setIsOpen(true)}
+          className="bg-primary hover:bg-primary-hover text-white"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Novo Produto
+        </Button>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button data-testid="add-product-button" className="bg-primary hover:bg-primary-hover text-white">
-              <Plus className="w-4 h-4 mr-2" />
-              Novo Produto
-            </Button>
-          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Novo Produto</DialogTitle>
