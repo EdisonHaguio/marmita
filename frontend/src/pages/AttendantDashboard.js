@@ -136,6 +136,7 @@ export default function AttendantDashboard({ user, onLogout }) {
         accompaniments: selectedAccompaniments,
         protein: selectedProtein,
         beverages: selectedBeverages,
+        salad_quantity: saladQuantity,
         observations,
         total_price: calculateTotal(),
         attendant_code: user.code,
