@@ -91,6 +91,11 @@ class ProductUpdate(BaseModel):
     price: Optional[float] = None
     active: Optional[bool] = None
 
+class OrderItem(BaseModel):
+    size: str  # P, M, G
+    protein: str
+    accompaniments: List[str] = []
+
 class Order(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -98,14 +103,12 @@ class Order(BaseModel):
     customer_name: str
     order_type: str  # BALCAO or ENTREGA
     delivery_address: Optional[str] = None
-    size: str  # P, M, G
-    accompaniments: List[str] = []  # List of accompaniment names
-    protein: str  # Protein name
-    salads: List[str] = []  # List of salad names
-    beverages: List[str] = []  # List of beverage names
+    items: List[OrderItem] = []  # Multiple marmitas
+    salads: List[str] = []  # Shared salads
+    beverages: List[str] = []  # Shared beverages
     observations: Optional[str] = None
     total_price: float
-    status: str = "pending"  # pending, preparing, ready, delivered
+    status: str = "pending"
     attendant_code: str
     attendant_name: str
     printed: bool = False
@@ -115,9 +118,7 @@ class OrderCreate(BaseModel):
     customer_name: str
     order_type: str
     delivery_address: Optional[str] = None
-    size: str
-    accompaniments: List[str]
-    protein: str
+    items: List[OrderItem]
     salads: List[str] = []
     beverages: List[str] = []
     observations: Optional[str] = None
