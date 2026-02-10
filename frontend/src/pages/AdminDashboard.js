@@ -247,6 +247,7 @@ function ProductsTab({ products, onRefresh }) {
                 >
                   <option value="accompaniment">Acompanhamento</option>
                   <option value="protein">Mistura (Proteína)</option>
+                  <option value="salad">Salada</option>
                   <option value="beverage">Bebida</option>
                 </select>
               </div>
