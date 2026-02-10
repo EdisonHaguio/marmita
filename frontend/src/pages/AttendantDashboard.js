@@ -371,26 +371,29 @@ export default function AttendantDashboard({ user, onLogout }) {
                 </div>
               </div>
 
-              {/* Salad Quantity */}
-              <div className="bg-white rounded-2xl p-6 shadow-warm">
-                <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">Quantidade de Saladas</h2>
-                <div className="grid grid-cols-3 gap-3">
-                  {[1, 2, 3].map((qty) => (
-                    <button
-                      key={qty}
-                      data-testid={`salad-qty-${qty}`}
-                      onClick={() => setSaladQuantity(qty)}
-                      className={`h-16 rounded-xl border-2 transition-all font-semibold text-xl ${
-                        saladQuantity === qty
-                          ? "border-accent-green bg-accent-green text-white shadow-lg scale-105"
-                          : "border-orange-200 bg-white text-secondary hover:border-primary"
-                      }`}
-                    >
-                      {qty} Salada{qty > 1 ? 's' : ''}
-                    </button>
-                  ))}
+              {/* Salads */}
+              {salads.length > 0 && (
+                <div className="bg-white rounded-2xl p-6 shadow-warm">
+                  <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">Saladas (Opcional)</h2>
+                  <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {salads.map((salad) => (
+                      <button
+                        key={salad.id}
+                        data-testid={`salad-${salad.name.toLowerCase().replace(/\s/g, '-')}`}
+                        onClick={() => toggleSalad(salad.name)}
+                        className={`h-16 rounded-xl border-2 transition-all flex items-center justify-between px-4 font-medium ${
+                          selectedSalads.includes(salad.name)
+                            ? "border-accent-green bg-accent-green text-white shadow-lg"
+                            : "border-orange-200 bg-white text-secondary hover:border-primary"
+                        }`}
+                      >
+                        <span>{salad.name}</span>
+                        <span className="text-sm opacity-80">+ R$ {(salad.price || 0).toFixed(2)}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Proteins */}
               <div className="bg-white rounded-2xl p-6 shadow-warm">
