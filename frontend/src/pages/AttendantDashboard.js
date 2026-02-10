@@ -28,9 +28,16 @@ export default function AttendantDashboard({ user, onLogout }) {
   const [showCustomerSuggestions, setShowCustomerSuggestions] = useState(false);
   const [orderType, setOrderType] = useState("BALCAO");
   const [deliveryAddress, setDeliveryAddress] = useState("");
+  
+  // Current marmita being added
   const [size, setSize] = useState("M");
   const [selectedAccompaniments, setSelectedAccompaniments] = useState([]);
   const [selectedProtein, setSelectedProtein] = useState("");
+  
+  // Cart of marmitas
+  const [cartItems, setCartItems] = useState([]);
+  
+  // Shared items
   const [selectedSalads, setSelectedSalads] = useState([]);
   const [selectedBeverages, setSelectedBeverages] = useState([]);
   const [observations, setObservations] = useState("");
