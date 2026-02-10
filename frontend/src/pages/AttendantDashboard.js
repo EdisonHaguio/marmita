@@ -207,6 +207,7 @@ export default function AttendantDashboard({ user, onLogout }) {
       // Reset form
       setCustomerName("");
       setDeliveryAddress("");
+      setCartItems([]);
       setSelectedAccompaniments([]);
       setSelectedProtein("");
       setSelectedSalads([]);
