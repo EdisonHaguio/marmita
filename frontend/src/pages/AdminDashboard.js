@@ -298,6 +298,19 @@ function ProductsTab({ products, onRefresh }) {
                   />
                 </div>
               )}
+              {formData.type === "salad" && (
+                <div>
+                  <label className="block text-sm font-medium mb-2">Preço (fixo)</label>
+                  <Input
+                    data-testid="product-price-salad-input"
+                    type="number"
+                    step="0.01"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                    placeholder="3.00"
+                  />
+                </div>
+              )}
               <Button data-testid="submit-product-button" type="submit" className="w-full bg-primary hover:bg-primary-hover text-white">
                 Criar Produto
               </Button>
