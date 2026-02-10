@@ -135,6 +135,12 @@ export default function KitchenDisplay() {
                       <p className="text-xs text-secondary-light">Acompanhamentos</p>
                       <p className="text-sm text-secondary">{order.accompaniments.join(", ")}</p>
                     </div>
+                    {order.salad_quantity && (
+                      <div>
+                        <p className="text-xs text-secondary-light">Saladas</p>
+                        <p className="text-sm font-medium text-accent-green">{order.salad_quantity} Salada{order.salad_quantity > 1 ? 's' : ''}</p>
+                      </div>
+                    )}
                     {order.beverages && order.beverages.length > 0 && (
                       <div>
                         <p className="text-xs text-secondary-light">Bebidas</p>
