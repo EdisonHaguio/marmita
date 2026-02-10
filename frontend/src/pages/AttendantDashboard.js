@@ -109,6 +109,14 @@ export default function AttendantDashboard({ user, onLogout }) {
     const priceKey = `price_${size.toLowerCase()}`;
     let total = proteinProduct[priceKey] || 0;
     
+    // Add salad prices
+    selectedSalads.forEach(saladName => {
+      const salad = products.find(p => p.name === saladName && p.type === "salad");
+      if (salad) {
+        total += salad.price || 0;
+      }
+    });
+    
     // Add beverage prices
     selectedBeverages.forEach(bevName => {
       const beverage = products.find(p => p.name === bevName && p.type === "beverage");
