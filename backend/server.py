@@ -340,9 +340,16 @@ async def print_order(order_id: str):
     if order_dict['order_type'] == 'ENTREGA' and order_dict.get('delivery_address'):
         printer.text(f"End: {order_dict['delivery_address']}\n")
     
-    printer.text(f"Tamanho: {order_dict['size']}\n")
-    printer.text(f"Acompanhamentos: {', '.join(order_dict['accompaniments'])}\n")
-    printer.text(f"Mistura: {order_dict['protein']}\n")
+    printer.text('------------------------\n')
+    
+    # Print each marmita
+    for idx, item in enumerate(order_dict['items'], 1):
+        printer.text(f"\nMarmita {idx} ({item['size']}):\n")
+        printer.text(f"  Mistura: {item['protein']}\n")
+        if item.get('accompaniments'):
+            printer.text(f"  Acomp.: {', '.join(item['accompaniments'])}\n")
+    
+    printer.text('------------------------\n')
     
     if order_dict.get('salads') and len(order_dict['salads']) > 0:
         printer.text(f"Saladas: {', '.join(order_dict['salads'])}\n")
