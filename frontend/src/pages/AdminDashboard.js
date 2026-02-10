@@ -209,6 +209,7 @@ function ProductsTab({ products, onRefresh }) {
 
   const accompaniments = products.filter(p => p.type === "accompaniment");
   const proteins = products.filter(p => p.type === "protein");
+  const salads = products.filter(p => p.type === "salad");
   const beverages = products.filter(p => p.type === "beverage");
 
   return (
