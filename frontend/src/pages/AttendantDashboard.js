@@ -141,7 +141,7 @@ export default function AttendantDashboard({ user, onLogout }) {
   };
 
   const addMarmitaToCart = () => {
-    if (!selectedProtein || selected Accompaniments.length === 0) {
+    if (!selectedProtein || selectedAccompaniments.length === 0) {
       toast.error("Selecione proteína e acompanhamentos");
       return;
     }
