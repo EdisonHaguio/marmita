@@ -123,18 +123,35 @@ export default function KitchenDisplay() {
                         <p className="text-sm font-medium text-secondary">{order.order_type}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-secondary-light">Tamanho</p>
-                        <p className="text-sm font-medium text-secondary">{order.size}</p>
+                        <p className="text-xs text-secondary-light">Marmitas</p>
+                        <p className="text-sm font-medium text-secondary">{order.items?.length || 1}</p>
                       </div>
                     </div>
-                    <div>
-                      <p className="text-xs text-secondary-light">Mistura</p>
-                      <p className="text-base font-bold text-primary">{order.protein}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-secondary-light">Acompanhamentos</p>
-                      <p className="text-sm text-secondary">{order.accompaniments.join(", ")}</p>
-                    </div>
+                    
+                    {order.items && order.items.length > 0 ? (
+                      <div className="space-y-2 pt-2 border-t border-orange-200">
+                        {order.items.map((item, idx) => (
+                          <div key={idx} className="bg-orange-50 rounded p-2">
+                            <p className="text-xs font-bold text-primary">Marmita {idx + 1} - Tamanho {item.size}</p>
+                            <p className="text-sm font-bold text-secondary">{item.protein}</p>
+                            {item.accompaniments && item.accompaniments.length > 0 && (
+                              <p className="text-xs text-secondary-light">{item.accompaniments.join(", ")}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <>
+                        <div>
+                          <p className="text-xs text-secondary-light">Mistura</p>
+                          <p className="text-base font-bold text-primary">{order.protein}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-secondary-light">Acompanhamentos</p>
+                          <p className="text-sm text-secondary">{order.accompaniments?.join(", ")}</p>
+                        </div>
+                      </>
+                    )}
                     {order.salads && order.salads.length > 0 && (
                       <div>
                         <p className="text-xs text-secondary-light">Saladas</p>
