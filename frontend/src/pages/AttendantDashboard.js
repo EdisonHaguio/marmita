@@ -110,11 +110,16 @@ export default function AttendantDashboard({ user, onLogout }) {
   ).slice(0, 5);
 
   const calculateTotal = () => {
-    const proteinProduct = products.find(p => p.name === selectedProtein);
-    if (!proteinProduct) return 0;
+    let total = 0;
     
-    const priceKey = `price_${size.toLowerCase()}`;
-    let total = proteinProduct[priceKey] || 0;
+    // Calculate marmitas prices
+    cartItems.forEach(item => {
+      const proteinProduct = products.find(p => p.name === item.protein);
+      if (proteinProduct) {
+        const priceKey = `price_${item.size.toLowerCase()}`;
+        total += proteinProduct[priceKey] || 0;
+      }
+    });
     
     // Add salad prices
     selectedSalads.forEach(saladName => {
@@ -133,6 +138,32 @@ export default function AttendantDashboard({ user, onLogout }) {
     });
     
     return total;
+  };
+
+  const addMarmitaToCart = () => {
+    if (!selectedProtein || selected Accompaniments.length === 0) {
+      toast.error("Selecione proteína e acompanhamentos");
+      return;
+    }
+
+    const newItem = {
+      size,
+      protein: selectedProtein,
+      accompaniments: selectedAccompaniments,
+    };
+
+    setCartItems([...cartItems, newItem]);
+    
+    // Reset marmita form
+    setSize("M");
+    setSelectedAccompaniments([]);
+    setSelectedProtein("");
+    
+    toast.success("Marmita adicionada!");
+  };
+
+  const removeMarmitaFromCart = (index) => {
+    setCartItems(cartItems.filter((_, i) => i !== index));
   };
 
   const handleCreateOrder = async () => {
