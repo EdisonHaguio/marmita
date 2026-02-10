@@ -456,7 +456,58 @@ export default function AttendantDashboard({ user, onLogout }) {
                     );
                   })}
                 </div>
+                <Button
+                  data-testid="add-marmita-to-cart"
+                  onClick={addMarmitaToCart}
+                  disabled={!selectedProtein || selectedAccompaniments.length === 0}
+                  className="w-full mt-4 h-12 bg-accent-green hover:bg-green-700 text-white rounded-xl"
+                >
+                  <Plus className="w-5 h-5 mr-2" />
+                  Adicionar Marmita ao Pedido
+                </Button>
               </div>
+
+              {/* Cart */}
+              {cartItems.length > 0 && (
+                <div className="bg-white rounded-2xl p-6 shadow-warm border-2 border-primary">
+                  <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">
+                    Marmitas no Pedido ({cartItems.length})
+                  </h2>
+                  <div className="space-y-2">
+                    {cartItems.map((item, index) => {
+                      const proteinProduct = products.find(p => p.name === item.protein);
+                      const priceKey = `price_${item.size.toLowerCase()}`;
+                      const price = proteinProduct?.[priceKey] || 0;
+                      return (
+                        <div
+                          key={index}
+                          data-testid={`cart-item-${index}`}
+                          className="flex items-center justify-between p-4 bg-orange-50 rounded-xl"
+                        >
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono font-bold text-primary">#{index + 1}</span>
+                              <span className="font-semibold text-secondary">Tamanho {item.size}</span>
+                              <span className="text-sm text-secondary-light">R$ {price.toFixed(2)}</span>
+                            </div>
+                            <p className="text-sm text-secondary">{item.protein}</p>
+                            <p className="text-xs text-secondary-light">{item.accompaniments.join(", ")}</p>
+                          </div>
+                          <Button
+                            data-testid={`remove-marmita-${index}`}
+                            onClick={() => removeMarmitaFromCart(index)}
+                            variant="outline"
+                            size="sm"
+                            className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               {/* Beverages */}
               {beverages.length > 0 && (
