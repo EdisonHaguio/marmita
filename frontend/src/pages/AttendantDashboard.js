@@ -191,6 +191,7 @@ export default function AttendantDashboard({ user, onLogout }) {
     try {
       const orderData = {
         customer_name: customerName,
+        is_company_order: isCompanyOrder,
         order_type: orderType,
         delivery_address: orderType === "ENTREGA" ? deliveryAddress : null,
         items: cartItems,
