@@ -531,7 +531,7 @@ export default function AttendantDashboard({ user, onLogout }) {
               {cartItems.length > 0 && (
                 <div className="bg-white rounded-2xl p-6 shadow-warm border-2 border-primary">
                   <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">
-                    Marmitas no Pedido ({cartItems.length})
+                    {isCompanyOrder ? `Marmitas da Empresa (${cartItems.length})` : `Marmitas no Pedido (${cartItems.length})`}
                   </h2>
                   <div className="space-y-2">
                     {cartItems.map((item, index) => {
@@ -547,6 +547,11 @@ export default function AttendantDashboard({ user, onLogout }) {
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
                               <span className="font-mono font-bold text-primary">#{index + 1}</span>
+                              {item.employee_name && (
+                                <span className="px-2 py-1 bg-accent-blue text-white text-xs rounded-full font-medium">
+                                  👤 {item.employee_name}
+                                </span>
+                              )}
                               <span className="font-semibold text-secondary">Tamanho {item.size}</span>
                               <span className="text-sm text-secondary-light">R$ {price.toFixed(2)}</span>
                             </div>
@@ -566,6 +571,13 @@ export default function AttendantDashboard({ user, onLogout }) {
                       );
                     })}
                   </div>
+                  {isCompanyOrder && (
+                    <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                      <p className="text-sm text-accent-blue font-medium">
+                        📄 Serão impressos {cartItems.length} cupons individuais (1 por funcionário)
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 
