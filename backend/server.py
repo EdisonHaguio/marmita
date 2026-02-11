@@ -495,7 +495,7 @@ async def update_settings(update: SettingsUpdate):
     
     update_dict['updated_at'] = datetime.now(timezone.utc).isoformat()
     
-    result = await db.settings.update_one({"id": "settings"}, {"$set": update_dict}, upsert=True)
+    await db.settings.update_one({"id": "settings"}, {"$set": update_dict}, upsert=True)
     return {"message": "Configurações atualizadas"}
 
 # Initialize default admin user
