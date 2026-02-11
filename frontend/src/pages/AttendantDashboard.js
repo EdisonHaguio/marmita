@@ -496,14 +496,34 @@ export default function AttendantDashboard({ user, onLogout }) {
                     );
                   })}
                 </div>
+                
+                {/* Employee Name for Company Orders */}
+                {isCompanyOrder && (
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-secondary mb-2">
+                      👤 Nome do Funcionário *
+                    </label>
+                    <Input
+                      data-testid="employee-name-input"
+                      value={employeeName}
+                      onChange={(e) => setEmployeeName(e.target.value)}
+                      placeholder="Ex: João Silva"
+                      className="h-12 border-orange-200"
+                    />
+                    <p className="text-xs text-secondary-light mt-1">
+                      📄 Será impresso um cupom individual para este funcionário
+                    </p>
+                  </div>
+                )}
+                
                 <Button
                   data-testid="add-marmita-to-cart"
                   onClick={addMarmitaToCart}
-                  disabled={!selectedProtein || selectedAccompaniments.length === 0}
+                  disabled={!selectedProtein || selectedAccompaniments.length === 0 || (isCompanyOrder && !employeeName)}
                   className="w-full mt-4 h-12 bg-accent-green hover:bg-green-700 text-white rounded-xl"
                 >
                   <Plus className="w-5 h-5 mr-2" />
-                  Adicionar Marmita ao Pedido
+                  {isCompanyOrder ? "Adicionar Marmita do Funcionário" : "Adicionar Marmita ao Pedido"}
                 </Button>
               </div>
 
