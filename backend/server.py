@@ -160,7 +160,47 @@ def hash_password(password: str) -> str:
 # ===== ROUTES =====
 @api_router.get("/")
 async def root():
-    return {"message": "Dona Guedes API", "status": "online"}
+    # Verifica licença
+    is_valid, message, days = license_manager.check_license()
+    return {
+        "message": "Dona Guedes API", 
+        "status": "online",
+        "license_valid": is_valid,
+        "license_message": message,
+        "days_remaining": days
+    }
+
+@api_router.get("/license/status")
+async def get_license_status():
+    is_valid, message, days = license_manager.check_license()
+    client_info = license_manager.get_client_info()
+    
+    return {
+        "valid": is_valid,
+        "message": message,
+        "days_remaining": days,
+        "client_info": client_info
+    }
+
+class LicenseActivation(BaseModel):
+    client_name: str
+    cnpj_cpf: str
+    phone: str
+    email: str
+
+@api_router.post("/license/activate")
+async def activate_license(data: LicenseActivation):
+    success, message = license_manager.register_client(
+        data.client_name,
+        data.cnpj_cpf,
+        data.phone,
+        data.email
+    )
+    
+    if success:
+        return {"success": True, "message": message}
+    else:
+        raise HTTPException(status_code=400, detail=message)
 
 @api_router.post("/auth/login")
 async def login(req: LoginRequest):
