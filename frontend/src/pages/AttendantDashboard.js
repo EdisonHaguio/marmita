@@ -369,7 +369,6 @@ export default function AttendantDashboard({ user, onLogout }) {
                       </button>
                     </div>
                   </div>
-                </div>
                   <div>
                     <label className="block text-sm font-medium text-secondary mb-2">Tipo de Pedido *</label>
                     <div className="flex gap-2">
