@@ -740,24 +740,43 @@ function SettingsTab({ settings, setSettings, onSubmit, loading }) {
           )}
         </div>
         <div>
-          <label className="block text-sm font-medium text-secondary mb-2">IP da Impressora (Tanca T650)</label>
-          <Input
-            data-testid="settings-printer-ip-input"
-            value={settings.printer_ip || ""}
-            onChange={(e) => setSettings({ ...settings, printer_ip: e.target.value })}
-            placeholder="192.168.1.100"
-          />
+          <label className="block text-sm font-medium text-secondary mb-2">Tipo de Impressora</label>
+          <select
+            data-testid="settings-printer-type-select"
+            value={settings.printer_type || "windows"}
+            onChange={(e) => setSettings({ ...settings, printer_type: e.target.value })}
+            className="w-full h-10 border border-gray-300 rounded-lg px-3"
+          >
+            <option value="windows">Impressora Padrão do Windows (USB/Rede)</option>
+            <option value="thermal">Impressora Térmica ESC/POS (Tanca T650)</option>
+          </select>
+          <p className="text-xs text-secondary-light mt-1">
+            Windows: usa qualquer impressora instalada no Windows | Térmica: requer IP da impressora
+          </p>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-secondary mb-2">Porta da Impressora</label>
-          <Input
-            data-testid="settings-printer-port-input"
-            type="number"
-            value={settings.printer_port || 9100}
-            onChange={(e) => setSettings({ ...settings, printer_port: parseInt(e.target.value) })}
-            placeholder="9100"
-          />
-        </div>
+        {settings.printer_type === "thermal" && (
+          <>
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-2">IP da Impressora Térmica</label>
+              <Input
+                data-testid="settings-printer-ip-input"
+                value={settings.printer_ip || ""}
+                onChange={(e) => setSettings({ ...settings, printer_ip: e.target.value })}
+                placeholder="192.168.1.100"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-2">Porta da Impressora</label>
+              <Input
+                data-testid="settings-printer-port-input"
+                type="number"
+                value={settings.printer_port || 9100}
+                onChange={(e) => setSettings({ ...settings, printer_port: parseInt(e.target.value) })}
+                placeholder="9100"
+              />
+            </div>
+          </>
+        )}
         <Button
           data-testid="save-settings-button"
           type="submit"
