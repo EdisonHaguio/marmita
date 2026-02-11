@@ -311,7 +311,9 @@ export default function AttendantDashboard({ user, onLogout }) {
                 <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">Informações do Cliente</h2>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="relative">
-                    <label className="block text-sm font-medium text-secondary mb-2">Nome do Cliente *</label>
+                    <label className="block text-sm font-medium text-secondary mb-2">
+                      {isCompanyOrder ? "Nome da Empresa *" : "Nome do Cliente *"}
+                    </label>
                     <Input
                       data-testid="customer-name-input"
                       value={customerName}
@@ -320,7 +322,7 @@ export default function AttendantDashboard({ user, onLogout }) {
                         setShowCustomerSuggestions(e.target.value.length > 0);
                       }}
                       onFocus={() => setShowCustomerSuggestions(customerName.length > 0)}
-                      placeholder="Digite o nome"
+                      placeholder={isCompanyOrder ? "Nome da empresa" : "Digite o nome"}
                       className="h-12 border-orange-200"
                     />
                     {showCustomerSuggestions && filteredCustomers.length > 0 && (
@@ -340,6 +342,34 @@ export default function AttendantDashboard({ user, onLogout }) {
                       </div>
                     )}
                   </div>
+                  <div>
+                    <label className="block text-sm font-medium text-secondary mb-2">Tipo de Cliente</label>
+                    <div className="flex gap-2">
+                      <button
+                        data-testid="client-type-normal"
+                        onClick={() => setIsCompanyOrder(false)}
+                        className={`flex-1 h-12 rounded-xl border-2 transition-all ${
+                          !isCompanyOrder
+                            ? "border-primary bg-primary text-white"
+                            : "border-orange-200 hover:border-primary bg-white text-secondary"
+                        }`}
+                      >
+                        Cliente Normal
+                      </button>
+                      <button
+                        data-testid="client-type-company"
+                        onClick={() => setIsCompanyOrder(true)}
+                        className={`flex-1 h-12 rounded-xl border-2 transition-all ${
+                          isCompanyOrder
+                            ? "border-primary bg-primary text-white"
+                            : "border-orange-200 hover:border-primary bg-white text-secondary"
+                        }`}
+                      >
+                        Empresa
+                      </button>
+                    </div>
+                  </div>
+                </div>
                   <div>
                     <label className="block text-sm font-medium text-secondary mb-2">Tipo de Pedido *</label>
                     <div className="flex gap-2">
