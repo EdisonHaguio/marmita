@@ -25,6 +25,7 @@ export default function AttendantDashboard({ user, onLogout }) {
   
   // Order form state
   const [customerName, setCustomerName] = useState("");
+  const [isCompanyOrder, setIsCompanyOrder] = useState(false);
   const [showCustomerSuggestions, setShowCustomerSuggestions] = useState(false);
   const [orderType, setOrderType] = useState("BALCAO");
   const [deliveryAddress, setDeliveryAddress] = useState("");
@@ -33,6 +34,7 @@ export default function AttendantDashboard({ user, onLogout }) {
   const [size, setSize] = useState("M");
   const [selectedAccompaniments, setSelectedAccompaniments] = useState([]);
   const [selectedProtein, setSelectedProtein] = useState("");
+  const [employeeName, setEmployeeName] = useState("");  // Para pedidos de empresa
   
   // Cart of marmitas
   const [cartItems, setCartItems] = useState([]);
