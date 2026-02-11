@@ -540,7 +540,7 @@ export default function AttendantDashboard({ user, onLogout }) {
                       const price = proteinProduct?.[priceKey] || 0;
                       return (
                         <div
-                          key={index}
+                          key={item.id}
                           data-testid={`cart-item-${index}`}
                           className="flex items-center justify-between p-4 bg-orange-50 rounded-xl"
                         >
