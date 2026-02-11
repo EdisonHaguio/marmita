@@ -92,6 +92,7 @@ class ProductUpdate(BaseModel):
     active: Optional[bool] = None
 
 class OrderItem(BaseModel):
+    employee_name: Optional[str] = None  # Nome do funcionário (para empresas)
     size: str  # P, M, G
     protein: str
     accompaniments: List[str] = []
@@ -100,7 +101,8 @@ class Order(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     order_number: int
-    customer_name: str
+    customer_name: str  # Nome da empresa ou cliente
+    is_company_order: bool = False  # Se é pedido de empresa
     order_type: str  # BALCAO or ENTREGA
     delivery_address: Optional[str] = None
     items: List[OrderItem] = []  # Multiple marmitas
@@ -116,6 +118,7 @@ class Order(BaseModel):
 
 class OrderCreate(BaseModel):
     customer_name: str
+    is_company_order: bool = False
     order_type: str
     delivery_address: Optional[str] = None
     items: List[OrderItem]
