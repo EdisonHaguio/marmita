@@ -420,7 +420,7 @@ def generate_employee_receipt(order_dict, item, employee_name, settings):
     lines.append(f"Tamanho: {item['size']}")
     lines.append(f"Mistura: {item['protein']}")
     if item.get('accompaniments'):
-        lines.append(f"Acompanhamentos:")
+        lines.append("Acompanhamentos:")
         for acc in item['accompaniments']:
             lines.append(f"  - {acc}")
     lines.append("=" * 40)
