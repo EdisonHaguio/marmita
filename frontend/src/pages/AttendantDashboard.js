@@ -154,6 +154,7 @@ export default function AttendantDashboard({ user, onLogout }) {
     }
 
     const newItem = {
+      id: Date.now() + Math.random().toString(36).substr(2, 9),
       size,
       protein: selectedProtein,
       accompaniments: selectedAccompaniments,
