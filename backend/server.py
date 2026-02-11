@@ -430,7 +430,6 @@ def generate_employee_receipt(order_dict, item, employee_name, settings):
 
 def generate_windows_print(text, order_number):
     """Generate print file for Windows default printer"""
-    import tempfile
     import os
     
     # Create temp file with print content
