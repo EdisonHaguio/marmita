@@ -330,64 +330,147 @@ async def print_order(order_id: str):
     settings_dict = await db.settings.find_one({"id": "settings"}, {"_id": 0})
     settings = Settings(**settings_dict) if settings_dict else Settings()
     
-    # Generate ESC/POS commands
-    printer = Dummy()
-    printer.set(align='center', width=2, height=2)
-    printer.text(settings.store_name + '\n')
-    printer.set(align='center', width=1, height=1)
-    printer.text(settings.store_address + '\n')
-    printer.text('------------------------\n')
-    printer.set(align='left')
-    printer.text(f"Pedido: {order_dict['order_number']}\n")
-    printer.text(f"Cliente: {order_dict['customer_name']}\n")
-    printer.text(f"Tipo: {order_dict['order_type']}\n")
+    # Check if it's a company order - print individual receipts
+    if order_dict.get('is_company_order'):
+        return await print_company_order(order_dict, settings)
+    else:
+        return await print_single_order(order_dict, settings)
+
+async def print_single_order(order_dict, settings):
+    """Print a single receipt for the whole order"""
+    receipt_text = generate_receipt_text(order_dict, settings)
+    
+    if settings.printer_type == "windows":
+        # Generate print file for Windows default printer
+        return generate_windows_print(receipt_text, order_dict['order_number'])
+    else:
+        # Use thermal printer
+        return send_to_thermal_printer(receipt_text, settings, order_dict['id'])
+
+async def print_company_order(order_dict, settings):
+    """Print individual receipts for each employee"""
+    receipts = []
+    
+    for idx, item in enumerate(order_dict['items'], 1):
+        employee_name = item.get('employee_name', f"Funcionário {idx}")
+        receipt_text = generate_employee_receipt(order_dict, item, employee_name, settings)
+        
+        if settings.printer_type == "windows":
+            receipts.append(generate_windows_print(receipt_text, f"{order_dict['order_number']}-{idx}"))
+        else:
+            receipts.append(send_to_thermal_printer(receipt_text, settings, order_dict['id']))
+    
+    await db.orders.update_one({"id": order_dict['id']}, {"$set": {"printed": True}})
+    return {"message": f"{len(receipts)} cupons gerados (1 por funcionário)", "printed": True, "count": len(receipts)}
+
+def generate_receipt_text(order_dict, settings):
+    """Generate receipt text for full order"""
+    lines = []
+    lines.append("=" * 40)
+    lines.append(settings.store_name.center(40))
+    lines.append(settings.store_address.center(40))
+    lines.append("=" * 40)
+    lines.append(f"Pedido: #{order_dict['order_number']}")
+    lines.append(f"Cliente: {order_dict['customer_name']}")
+    lines.append(f"Tipo: {order_dict['order_type']}")
     
     if order_dict['order_type'] == 'ENTREGA' and order_dict.get('delivery_address'):
-        printer.text(f"End: {order_dict['delivery_address']}\n")
+        lines.append(f"Endereco: {order_dict['delivery_address']}")
     
-    printer.text('------------------------\n')
+    lines.append("-" * 40)
     
     # Print each marmita
     for idx, item in enumerate(order_dict['items'], 1):
-        printer.text(f"\nMarmita {idx} ({item['size']}):\n")
-        printer.text(f"  Mistura: {item['protein']}\n")
+        lines.append(f"\nMarmita {idx} ({item['size']}):")
+        if item.get('employee_name'):
+            lines.append(f"  Para: {item['employee_name']}")
+        lines.append(f"  Mistura: {item['protein']}")
         if item.get('accompaniments'):
-            printer.text(f"  Acomp.: {', '.join(item['accompaniments'])}\n")
+            lines.append(f"  Acomp.: {', '.join(item['accompaniments'])}")
     
-    printer.text('------------------------\n')
+    lines.append("-" * 40)
     
     if order_dict.get('salads') and len(order_dict['salads']) > 0:
-        printer.text(f"Saladas: {', '.join(order_dict['salads'])}\n")
+        lines.append(f"Saladas: {', '.join(order_dict['salads'])}")
     
     if order_dict.get('beverages') and len(order_dict['beverages']) > 0:
-        printer.text(f"Bebidas: {', '.join(order_dict['beverages'])}\n")
+        lines.append(f"Bebidas: {', '.join(order_dict['beverages'])}")
     
     if order_dict.get('observations'):
-        printer.text(f"Obs: {order_dict['observations']}\n")
+        lines.append(f"Obs: {order_dict['observations']}")
     
-    printer.text(f"Valor: R$ {order_dict['total_price']:.2f}\n")
-    printer.text(f"Atendente: {order_dict['attendant_name']}\n")
-    printer.text('\n\n')
-    printer.cut()
+    lines.append(f"\nVALOR: R$ {order_dict['total_price']:.2f}")
+    lines.append(f"Atendente: {order_dict['attendant_name']}")
+    lines.append("=" * 40)
+    lines.append("\n\n")
     
-    # Get ESC/POS data
-    escpos_data = printer.output
+    return "\n".join(lines)
+
+def generate_employee_receipt(order_dict, item, employee_name, settings):
+    """Generate individual receipt for one employee"""
+    lines = []
+    lines.append("=" * 40)
+    lines.append(settings.store_name.center(40))
+    lines.append("=" * 40)
+    lines.append(f"Pedido: #{order_dict['order_number']}")
+    lines.append(f"Empresa: {order_dict['customer_name']}")
+    lines.append(f"\n>>> PARA: {employee_name} <<<\n")
+    lines.append("-" * 40)
+    lines.append(f"Tamanho: {item['size']}")
+    lines.append(f"Mistura: {item['protein']}")
+    if item.get('accompaniments'):
+        lines.append(f"Acompanhamentos:")
+        for acc in item['accompaniments']:
+            lines.append(f"  - {acc}")
+    lines.append("=" * 40)
+    lines.append("\n\n")
     
-    # Try to print to network printer if configured
-    if settings.printer_ip:
-        try:
-            network_printer = Network(settings.printer_ip, port=settings.printer_port)
-            network_printer._raw(escpos_data)
-            network_printer.close()
-            await db.orders.update_one({"id": order_id}, {"$set": {"printed": True}})
-            return {"message": "Impresso com sucesso", "printed": True}
-        except Exception as e:
-            logging.error(f"Erro ao imprimir: {e}")
-            return {"message": f"Erro: {str(e)}", "printed": False}
+    return "\n".join(lines)
+
+def generate_windows_print(text, order_number):
+    """Generate print file for Windows default printer"""
+    import tempfile
+    import os
     
-    # Return ESC/POS data for download/manual printing
-    return Response(content=escpos_data, media_type="application/octet-stream", 
-                    headers={"Content-Disposition": f"attachment; filename=pedido_{order_dict['order_number']}.bin"})
+    # Create temp file with print content
+    temp_file = os.path.join(tempfile.gettempdir(), f"pedido_{order_number}.txt")
+    
+    with open(temp_file, 'w', encoding='utf-8') as f:
+        f.write(text)
+    
+    # Return instructions for Windows printing
+    return {
+        "message": "Arquivo gerado para impressão",
+        "file_path": temp_file,
+        "instruction": f"Execute: notepad /p {temp_file}",
+        "printed": True,
+        "type": "windows"
+    }
+
+def send_to_thermal_printer(text, settings, order_id):
+    """Send to thermal ESC/POS printer"""
+    try:
+        from escpos.printer import Network, Dummy
+        
+        if not settings.printer_ip:
+            return {"message": "IP da impressora não configurado", "printed": False}
+        
+        printer = Network(settings.printer_ip, port=settings.printer_port)
+        
+        # Convert text to ESC/POS commands
+        dummy = Dummy()
+        dummy.set(align='left')
+        for line in text.split('\n'):
+            dummy.text(line + '\n')
+        dummy.cut()
+        
+        printer._raw(dummy.output)
+        printer.close()
+        
+        return {"message": "Impresso em impressora térmica", "printed": True, "type": "thermal"}
+    except Exception as e:
+        logging.error(f"Erro ao imprimir: {e}")
+        return {"message": f"Erro: {str(e)}", "printed": False}
 
 @api_router.get("/settings", response_model=Settings)
 async def get_settings():
