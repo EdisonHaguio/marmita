@@ -148,10 +148,16 @@ export default function AttendantDashboard({ user, onLogout }) {
       return;
     }
 
+    if (isCompanyOrder && !employeeName) {
+      toast.error("Digite o nome do funcionário");
+      return;
+    }
+
     const newItem = {
       size,
       protein: selectedProtein,
       accompaniments: selectedAccompaniments,
+      employee_name: isCompanyOrder ? employeeName : null,
     };
 
     setCartItems([...cartItems, newItem]);
@@ -160,8 +166,9 @@ export default function AttendantDashboard({ user, onLogout }) {
     setSize("M");
     setSelectedAccompaniments([]);
     setSelectedProtein("");
+    setEmployeeName("");
     
-    toast.success("Marmita adicionada!");
+    toast.success(isCompanyOrder ? `Marmita para ${employeeName} adicionada!` : "Marmita adicionada!");
   };
 
   const removeMarmitaFromCart = (index) => {
