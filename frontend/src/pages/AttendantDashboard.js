@@ -172,8 +172,8 @@ export default function AttendantDashboard({ user, onLogout }) {
     toast.success(isCompanyOrder ? `Marmita para ${employeeName} adicionada!` : "Marmita adicionada!");
   };
 
-  const removeMarmitaFromCart = (index) => {
-    setCartItems(cartItems.filter((_, i) => i !== index));
+  const removeMarmitaFromCart = (itemId) => {
+    setCartItems(cartItems.filter((item) => item.id !== itemId));
   };
 
   const handleCreateOrder = async () => {
