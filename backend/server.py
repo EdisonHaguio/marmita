@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 import hashlib
 from escpos.printer import Network, Dummy
 import io
+from license_manager import license_manager
 import tempfile
 
 ROOT_DIR = Path(__file__).parent
