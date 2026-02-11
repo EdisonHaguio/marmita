@@ -560,7 +560,7 @@ export default function AttendantDashboard({ user, onLogout }) {
                           </div>
                           <Button
                             data-testid={`remove-marmita-${index}`}
-                            onClick={() => removeMarmitaFromCart(index)}
+                            onClick={() => removeMarmitaFromCart(item.id)}
                             variant="outline"
                             size="sm"
                             className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
