@@ -96,6 +96,20 @@ export default function AttendantDashboard({ user, onLogout }) {
     );
   };
 
+  const toggleProtein = (name) => {
+    const maxProteins = getMaxProteins(size);
+    setSelectedProteins(prev => {
+      if (prev.includes(name)) {
+        return prev.filter(p => p !== name);
+      } else if (prev.length < maxProteins) {
+        return [...prev, name];
+      } else {
+        toast.error(`Marmita ${size} permite apenas ${maxProteins} proteína(s)`);
+        return prev;
+      }
+    });
+  };
+
   const toggleSalad = (name) => {
     setSelectedSalads(prev => 
       prev.includes(name) ? prev.filter(s => s !== name) : [...prev, name]
