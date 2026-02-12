@@ -4,7 +4,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { toast } from "sonner";
-import { LogOut, Plus, ShoppingBag, Bike, Check, Printer, Clock, Trash2 } from "lucide-react";
+import { LogOut, Plus, ShoppingBag, Bike, Check, Printer, Clock, Trash2, Eye } from "lucide-react";
 
 const SIZES = [
   { value: "P", label: "P", color: "bg-accent-green" },
