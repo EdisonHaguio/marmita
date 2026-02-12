@@ -818,6 +818,30 @@ export default function AttendantDashboard({ user, onLogout }) {
                       <p className="font-medium text-secondary">{selectedBeverages.join(", ")}</p>
                     </div>
                   )}
+                  {selectedCoffees.length > 0 && (
+                    <div className="pb-2 border-b border-orange-100">
+                      <p className="text-sm text-secondary-light">Cafés</p>
+                      <p className="font-medium text-secondary">{selectedCoffees.join(", ")}</p>
+                    </div>
+                  )}
+                  {selectedSnacks.length > 0 && (
+                    <div className="pb-2 border-b border-orange-100">
+                      <p className="text-sm text-secondary-light">Lanches</p>
+                      <p className="font-medium text-secondary">{selectedSnacks.join(", ")}</p>
+                    </div>
+                  )}
+                  {selectedDesserts.length > 0 && (
+                    <div className="pb-2 border-b border-orange-100">
+                      <p className="text-sm text-secondary-light">Sobremesas</p>
+                      <p className="font-medium text-secondary">{selectedDesserts.join(", ")}</p>
+                    </div>
+                  )}
+                  {selectedOthers.length > 0 && (
+                    <div className="pb-2 border-b border-orange-100">
+                      <p className="text-sm text-secondary-light">Outros</p>
+                      <p className="font-medium text-secondary">{selectedOthers.join(", ")}</p>
+                    </div>
+                  )}
                   {observations && (
                     <div className="pb-2 border-b border-orange-100">
                       <p className="text-sm text-secondary-light">Observações</p>
