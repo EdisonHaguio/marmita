@@ -505,12 +505,22 @@ export default function AttendantDashboard({ user, onLogout }) {
               {/* Size Selection */}
               <div className="bg-white rounded-2xl p-6 shadow-warm">
                 <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">Tamanho da Marmita *</h2>
+                <p className="text-sm text-secondary-light mb-3">
+                  P = 1 proteína | M e G = 2 proteínas
+                </p>
                 <div className="grid grid-cols-3 gap-3">
                   {SIZES.map((s) => (
                     <button
                       key={s.value}
                       data-testid={`size-${s.value.toLowerCase()}`}
-                      onClick={() => setSize(s.value)}
+                      onClick={() => {
+                        setSize(s.value);
+                        // Limpa seleção de proteínas se ultrapassar o máximo do novo tamanho
+                        const maxProteins = s.value === "P" ? 1 : 2;
+                        if (selectedProteins.length > maxProteins) {
+                          setSelectedProteins(selectedProteins.slice(0, maxProteins));
+                        }
+                      }}
                       className={`h-20 rounded-xl border-2 transition-all font-semibold text-2xl ${
                         size === s.value
                           ? `${s.color} text-white border-transparent shadow-lg scale-105`
