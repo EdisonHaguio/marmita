@@ -308,6 +308,9 @@ export default function AttendantDashboard({ user, onLogout }) {
         others: selectedOthers,
         observations,
         total_price: calculateTotal(),
+        payment_method: paymentMethod,
+        amount_paid: paymentMethod === "DINHEIRO" ? parseFloat(amountPaid) || 0 : calculateTotal(),
+        change_amount: paymentMethod === "DINHEIRO" ? Math.max(0, (parseFloat(amountPaid) || 0) - calculateTotal()) : 0,
         attendant_code: user.code,
         attendant_name: user.name,
       };
