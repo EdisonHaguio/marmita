@@ -1,87 +1,68 @@
 @echo off
-title Dona Guedes - INSTALADOR
-
-echo.
-echo ============================================================
-echo     INSTALADOR - Sistema Dona Guedes
-echo     Japao Informatica - (19) 99813-2220
-echo ============================================================
+echo ============================================
+echo   INSTALADOR - Sistema Dona Guedes
+echo   Japao Informatica - (19) 99813-2220
+echo ============================================
 echo.
 
-echo [1/6] Verificando Python...
+echo Verificando Python...
 python --version
 if errorlevel 1 (
+    echo.
     echo ERRO: Python nao encontrado!
     echo Baixe em: https://www.python.org/downloads/
+    echo IMPORTANTE: Marque "Add Python to PATH"
     pause
     exit /b 1
 )
-echo       Python OK!
 
-echo.
-echo [2/6] Verificando Node.js...
+echo Verificando Node.js...
 node --version
 if errorlevel 1 (
+    echo.
     echo ERRO: Node.js nao encontrado!
     echo Baixe em: https://nodejs.org/
     pause
     exit /b 1
 )
-echo       Node.js OK!
 
 echo.
-echo [3/6] Instalando Backend...
+echo ============================================
+echo   INSTALANDO BACKEND
+echo ============================================
 cd /d %~dp0backend
 
-if exist venv (
-    echo       Removendo ambiente antigo...
-    rmdir /s /q venv
-)
+echo Removendo ambiente antigo...
+if exist venv rmdir /s /q venv
 
-echo       Criando ambiente virtual...
+echo Criando ambiente virtual...
 python -m venv venv
 
-echo       Ativando ambiente...
+echo Ativando ambiente...
 call venv\Scripts\activate.bat
 
-echo       Atualizando pip...
+echo Atualizando pip...
 python -m pip install --upgrade pip
 
-echo       Instalando dependencias do backend...
-pip install fastapi uvicorn pymongo pydantic python-jose passlib python-multipart requests bcrypt cryptography
-
-echo       Backend instalado!
+echo Instalando dependencias...
+pip install fastapi==0.115.0 uvicorn==0.30.6 pymongo==4.8.0 pydantic==2.9.1 python-jose==3.3.0 passlib==1.7.4 python-multipart==0.0.9 requests==2.32.3 bcrypt cryptography
 
 echo.
-echo [4/6] Instalando Frontend...
+echo ============================================
+echo   INSTALANDO FRONTEND
+echo ============================================
 cd /d %~dp0frontend
 
-if exist node_modules (
-    echo       Removendo node_modules antigo...
-    rmdir /s /q node_modules
-)
+echo Removendo node_modules antigo...
+if exist node_modules rmdir /s /q node_modules
+if exist package-lock.json del package-lock.json
 
-if exist package-lock.json (
-    del package-lock.json
-)
-
-echo       Instalando dependencias (pode demorar alguns minutos)...
+echo Instalando dependencias (aguarde alguns minutos)...
 call npm install --legacy-peer-deps
 
-echo       Frontend instalado!
-
 echo.
-echo [5/6] Criando arquivo de configuracao...
-echo REACT_APP_BACKEND_URL=http://localhost:8001> .env
-
-echo.
-echo [6/6] Instalacao concluida!
-echo.
-echo ============================================================
-echo     INSTALACAO CONCLUIDA COM SUCESSO!
-echo.
-echo     Para iniciar o sistema, execute: INICIAR_SISTEMA.bat
-echo ============================================================
-echo.
-
+echo ============================================
+echo   INSTALACAO CONCLUIDA!
+echo   Execute: INICIAR_SISTEMA.bat
+echo ============================================
 pause
