@@ -148,7 +148,19 @@ export default function AdminDashboard({ user, onLogout }) {
             }`}
           >
             <Users className="w-5 h-5 mr-2" />
-            Funcionários
+            Funcionarios
+          </Button>
+          <Button
+            data-testid="reports-tab"
+            onClick={() => setView("reports")}
+            className={`flex-1 h-12 rounded-xl transition-all whitespace-nowrap ${
+              view === "reports"
+                ? "bg-primary text-white shadow-lg"
+                : "bg-white text-secondary hover:bg-orange-50"
+            }`}
+          >
+            <BarChart3 className="w-5 h-5 mr-2" />
+            Relatorios
           </Button>
           <Button
             data-testid="settings-tab"
@@ -160,7 +172,7 @@ export default function AdminDashboard({ user, onLogout }) {
             }`}
           >
             <Settings className="w-5 h-5 mr-2" />
-            Configurações
+            Config
           </Button>
         </div>
 
