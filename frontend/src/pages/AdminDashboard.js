@@ -519,6 +519,203 @@ function ProductsTab({ products, onRefresh }) {
           )}
         </div>
       </div>
+
+      {/* Cafés */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">☕ Cafés</h3>
+        <div className="space-y-2">
+          {coffees.length === 0 ? (
+            <p className="text-center text-secondary-light py-4">Nenhum café cadastrado</p>
+          ) : (
+            coffees.map((p) => (
+              <div key={p.id} data-testid={`coffee-item-${p.id}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
+                <div>
+                  <p className="font-semibold text-secondary">{p.name}</p>
+                  <p className="text-sm text-secondary-light">R$ {(p.price || 0).toFixed(2)}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    data-testid={`toggle-coffee-${p.id}`}
+                    onClick={() => toggleProductActive(p.id, p.active)}
+                    variant="outline"
+                    size="sm"
+                    className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                  >
+                    {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    data-testid={`delete-coffee-${p.id}`}
+                    onClick={() => deleteProductPermanent(p.id, p.name)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Lanches */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">🥪 Lanches</h3>
+        <div className="space-y-2">
+          {snacks.length === 0 ? (
+            <p className="text-center text-secondary-light py-4">Nenhum lanche cadastrado</p>
+          ) : (
+            snacks.map((p) => (
+              <div key={p.id} data-testid={`snack-item-${p.id}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
+                <div>
+                  <p className="font-semibold text-secondary">{p.name}</p>
+                  <p className="text-sm text-secondary-light">R$ {(p.price || 0).toFixed(2)}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    data-testid={`toggle-snack-${p.id}`}
+                    onClick={() => toggleProductActive(p.id, p.active)}
+                    variant="outline"
+                    size="sm"
+                    className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                  >
+                    {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    data-testid={`delete-snack-${p.id}`}
+                    onClick={() => deleteProductPermanent(p.id, p.name)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Pizzas */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">🍕 Pizzas</h3>
+        <div className="space-y-2">
+          {pizzas.length === 0 ? (
+            <p className="text-center text-secondary-light py-4">Nenhuma pizza cadastrada</p>
+          ) : (
+            pizzas.map((p) => (
+              <div key={p.id} data-testid={`pizza-item-${p.id}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
+                <div>
+                  <p className="font-semibold text-secondary">{p.name}</p>
+                  <p className="text-sm text-secondary-light">
+                    P: R$ {(p.price_p || 0).toFixed(2)} | M: R$ {(p.price_m || 0).toFixed(2)} | G: R$ {(p.price_g || 0).toFixed(2)}
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    data-testid={`toggle-pizza-${p.id}`}
+                    onClick={() => toggleProductActive(p.id, p.active)}
+                    variant="outline"
+                    size="sm"
+                    className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                  >
+                    {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    data-testid={`delete-pizza-${p.id}`}
+                    onClick={() => deleteProductPermanent(p.id, p.name)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Sobremesas */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">🍰 Sobremesas</h3>
+        <div className="space-y-2">
+          {desserts.length === 0 ? (
+            <p className="text-center text-secondary-light py-4">Nenhuma sobremesa cadastrada</p>
+          ) : (
+            desserts.map((p) => (
+              <div key={p.id} data-testid={`dessert-item-${p.id}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
+                <div>
+                  <p className="font-semibold text-secondary">{p.name}</p>
+                  <p className="text-sm text-secondary-light">R$ {(p.price || 0).toFixed(2)}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    data-testid={`toggle-dessert-${p.id}`}
+                    onClick={() => toggleProductActive(p.id, p.active)}
+                    variant="outline"
+                    size="sm"
+                    className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                  >
+                    {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    data-testid={`delete-dessert-${p.id}`}
+                    onClick={() => deleteProductPermanent(p.id, p.name)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Outros */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">📦 Outros Produtos</h3>
+        <div className="space-y-2">
+          {others.length === 0 ? (
+            <p className="text-center text-secondary-light py-4">Nenhum outro produto cadastrado</p>
+          ) : (
+            others.map((p) => (
+              <div key={p.id} data-testid={`other-item-${p.id}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
+                <div>
+                  <p className="font-semibold text-secondary">{p.name}</p>
+                  <p className="text-sm text-secondary-light">R$ {(p.price || 0).toFixed(2)}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    data-testid={`toggle-other-${p.id}`}
+                    onClick={() => toggleProductActive(p.id, p.active)}
+                    variant="outline"
+                    size="sm"
+                    className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                  >
+                    {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    data-testid={`delete-other-${p.id}`}
+                    onClick={() => deleteProductPermanent(p.id, p.name)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </div>
   );
 }
