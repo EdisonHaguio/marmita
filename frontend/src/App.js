@@ -8,7 +8,8 @@ import KitchenDisplay from "./pages/KitchenDisplay";
 import AdminDashboard from "./pages/AdminDashboard";
 import { Toaster } from "./components/ui/sonner";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+// Auto-detect API URL (works both online and offline)
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 export const API = `${BACKEND_URL}/api`;
 
 export const axiosInstance = axios.create({
