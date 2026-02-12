@@ -359,6 +359,28 @@ export default function AttendantDashboard({ user, onLogout }) {
     }
   };
 
+  const [receiptPreview, setReceiptPreview] = useState(null);
+  const [showReceiptModal, setShowReceiptModal] = useState(false);
+
+  const handleViewReceipt = async (orderId) => {
+    try {
+      const response = await axiosInstance.get(`/orders/${orderId}/receipt`);
+      setReceiptPreview(response.data);
+      setShowReceiptModal(true);
+    } catch (error) {
+      toast.error("Erro ao carregar cupom");
+    }
+  };
+
+  const handleReprintOrder = async (orderId) => {
+    try {
+      await axiosInstance.post(`/orders/${orderId}/print`);
+      toast.success("Segunda via enviada para impressao!");
+    } catch (error) {
+      toast.error("Erro ao reimprimir");
+    }
+  };
+
   const accompaniments = products.filter(p => p.type === "accompaniment");
   const proteins = products.filter(p => p.type === "protein");
   const salads = products.filter(p => p.type === "salad");
