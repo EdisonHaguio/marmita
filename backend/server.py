@@ -111,12 +111,15 @@ class Order(BaseModel):
     items: List[OrderItem] = []  # Multiple marmitas
     salads: List[str] = []  # Shared salads
     beverages: List[str] = []  # Shared beverages
-    coffees: List[str] = []  # Cafés
+    coffees: List[str] = []  # Cafes
     snacks: List[str] = []  # Lanches
     desserts: List[str] = []  # Sobremesas
     others: List[str] = []  # Outros produtos
     observations: Optional[str] = None
     total_price: float
+    payment_method: str = "DINHEIRO"  # DINHEIRO, PIX, CARTAO, FIADO
+    amount_paid: float = 0  # Valor pago
+    change_amount: float = 0  # Troco
     status: str = "pending"
     attendant_code: str
     attendant_name: str
@@ -137,6 +140,9 @@ class OrderCreate(BaseModel):
     others: List[str] = []
     observations: Optional[str] = None
     total_price: float
+    payment_method: str = "DINHEIRO"
+    amount_paid: float = 0
+    change_amount: float = 0
     attendant_code: str
     attendant_name: str
 
