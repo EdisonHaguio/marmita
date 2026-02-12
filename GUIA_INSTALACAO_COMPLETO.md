@@ -390,11 +390,12 @@ Instalar em cada loja:
 ```bash
 # Backend
 cd C:\DonaGuedes\backend
+venv\Scripts\activate
 python -m uvicorn server:app --host 0.0.0.0 --port 8001
 
 # Frontend  
 cd C:\DonaGuedes\frontend
-yarn start
+npm start
 ```
 
 ### Ver Logs
