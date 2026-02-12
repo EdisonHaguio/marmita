@@ -441,7 +441,12 @@ def generate_receipt_text(order_dict, settings):
         lines.append(f"\nMarmita {idx} ({item['size']}):")
         if item.get('employee_name'):
             lines.append(f"  Para: {item['employee_name']}")
-        lines.append(f"  Mistura: {item['protein']}")
+        # Suporta tanto 'protein' quanto 'proteins'
+        proteins = item.get('proteins', [item.get('protein', '')])
+        if isinstance(proteins, list):
+            lines.append(f"  Mistura: {' + '.join(proteins)}")
+        else:
+            lines.append(f"  Mistura: {proteins}")
         if item.get('accompaniments'):
             lines.append(f"  Acomp.: {', '.join(item['accompaniments'])}")
     
@@ -453,13 +458,42 @@ def generate_receipt_text(order_dict, settings):
     if order_dict.get('beverages') and len(order_dict['beverages']) > 0:
         lines.append(f"Bebidas: {', '.join(order_dict['beverages'])}")
     
+    if order_dict.get('coffees') and len(order_dict['coffees']) > 0:
+        lines.append(f"Cafes: {', '.join(order_dict['coffees'])}")
+    
+    if order_dict.get('snacks') and len(order_dict['snacks']) > 0:
+        lines.append(f"Lanches: {', '.join(order_dict['snacks'])}")
+    
+    if order_dict.get('desserts') and len(order_dict['desserts']) > 0:
+        lines.append(f"Sobremesas: {', '.join(order_dict['desserts'])}")
+    
+    if order_dict.get('others') and len(order_dict['others']) > 0:
+        lines.append(f"Outros: {', '.join(order_dict['others'])}")
+    
     if order_dict.get('observations'):
         lines.append(f"Obs: {order_dict['observations']}")
     
-    lines.append(f"\nVALOR: R$ {order_dict['total_price']:.2f}")
+    lines.append("-" * 40)
+    lines.append(f"TOTAL: R$ {order_dict['total_price']:.2f}")
+    
+    # Pagamento
+    payment_method = order_dict.get('payment_method', 'DINHEIRO')
+    lines.append(f"Pagamento: {payment_method}")
+    
+    if payment_method == "DINHEIRO":
+        amount_paid = order_dict.get('amount_paid', 0)
+        change_amount = order_dict.get('change_amount', 0)
+        if amount_paid > 0:
+            lines.append(f"Valor Recebido: R$ {amount_paid:.2f}")
+            lines.append(f"TROCO: R$ {change_amount:.2f}")
+    
+    lines.append("-" * 40)
     lines.append(f"Atendente: {order_dict['attendant_name']}")
+    lines.append(f"Data: {order_dict.get('created_at', '')[:19]}")
     lines.append("=" * 40)
-    lines.append("\n\n")
+    lines.append("     Obrigado pela preferencia!")
+    lines.append("=" * 40)
+    lines.append("\n\n\n")
     
     return "\n".join(lines)
 
@@ -474,13 +508,18 @@ def generate_employee_receipt(order_dict, item, employee_name, settings):
     lines.append(f"\n>>> PARA: {employee_name} <<<\n")
     lines.append("-" * 40)
     lines.append(f"Tamanho: {item['size']}")
-    lines.append(f"Mistura: {item['protein']}")
+    # Suporta tanto 'protein' quanto 'proteins'
+    proteins = item.get('proteins', [item.get('protein', '')])
+    if isinstance(proteins, list):
+        lines.append(f"Mistura: {' + '.join(proteins)}")
+    else:
+        lines.append(f"Mistura: {proteins}")
     if item.get('accompaniments'):
         lines.append("Acompanhamentos:")
         for acc in item['accompaniments']:
             lines.append(f"  - {acc}")
     lines.append("=" * 40)
-    lines.append("\n\n")
+    lines.append("\n\n\n")
     
     return "\n".join(lines)
 
