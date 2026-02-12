@@ -1,81 +1,65 @@
-# 🍱 Sistema Dona Guedes - Sistema de Pedidos para Marmitaria
+# 🍱 Sistema Dona Guedes - Marmitaria
 
-Sistema completo de comanda digital desenvolvido para facilitar o gerenciamento de pedidos em marmitarias e restaurantes.
+Sistema completo de gerenciamento de pedidos para marmitaria.
 
-![Desenvolvido por Japão Informática](https://customer-assets.emergentagent.com/job_marmita-system/artifacts/8dh5t1su_WhatsApp%20Image%202026-02-07%20at%2015.47.35.jpeg)
+## 📋 Requisitos
 
-**Desenvolvido por:** Japão Informática  
-**Contato/Suporte:** (19) 99813-2220
+Instale na ordem:
 
----
+1. **Python 3.11+** - https://www.python.org/downloads/
+   - ⚠️ Marque "Add Python to PATH" durante instalação!
 
-## ✨ Funcionalidades
+2. **Node.js 18+** - https://nodejs.org/
+   - Escolha a versão LTS
 
-### 👨‍💼 Administrador
-- ✅ Gestão completa de produtos (Proteínas, Acompanhamentos e Bebidas)
-- ✅ Cadastro de funcionários com código de acesso
-- ✅ Cadastro de clientes com telefone e endereço
-- ✅ Configurações da loja (nome, endereço, logo)
-- ✅ Configuração de impressora térmica
-- ✅ Ativar/desativar produtos temporariamente
-- ✅ Exclusão permanente de produtos
+3. **MongoDB Community** - https://www.mongodb.com/try/download/community
+   - ⚠️ Marque "Install MongoDB as a Service"
 
-### 👨‍🍳 Atendente
-- ✅ Login rápido por código numérico
-- ✅ Interface de seleção rápida (clique único)
-- ✅ Autocompletar de clientes cadastrados
-- ✅ Pedidos: Balcão ou Entrega
-- ✅ Marmitas em 3 tamanhos: P, M, G
-- ✅ Seleção múltipla de acompanhamentos
-- ✅ Seleção de proteína (mistura)
-- ✅ Seleção opcional de bebidas
-- ✅ Cálculo automático do valor total
-- ✅ Impressão automática ao criar pedido
-- ✅ Histórico dos próprios pedidos
+4. **Reinicie o computador** após instalar tudo
 
-### 🍳 Cozinha
-- ✅ Visualização em tempo real dos pedidos
-- ✅ Atualização automática a cada 5 segundos
-- ✅ Gerenciamento de status: Pendente → Preparando → Pronto → Entregue
-- ✅ Display otimizado para leitura à distância
-- ✅ Destaque visual das bebidas
+## 🚀 Como Executar
 
-### 🖨️ Impressão
-- ✅ Suporte à impressora térmica Tanca T650
-- ✅ Protocolo ESC/POS
-- ✅ Impressão automática ao criar pedido
-- ✅ Reimpressão de pedidos anteriores
-- ✅ Formato de comanda otimizado
+**Duplo clique em:** `INICIAR_SISTEMA.bat`
 
----
+Ou execute manualmente:
 
-## 🚀 Instalação Rápida (Windows)
+### Backend (Terminal 1):
+```cmd
+cd backend
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+python -m uvicorn server:app --host 0.0.0.0 --port 8001
+```
 
-### Opção 1: Executável Standalone (Mais Fácil)
+### Frontend (Terminal 2):
+```cmd
+cd frontend
+npm install
+set REACT_APP_BACKEND_URL=http://localhost:8001
+npm start
+```
 
-1. **Duplo clique** em `INICIAR_SISTEMA.bat`
-2. Aguardar inicialização (abre automaticamente)
-3. Acessar: `http://localhost:3000`
+## 🔐 Acesso
 
-**Requisitos:**
-- Python 3.11+ instalado
-- Node.js 18+ instalado
-- MongoDB instalado e rodando
+- **URL:** http://localhost:3000
+- **Admin:** código `admin`, senha `admin123`
+- **Atendente:** usar código cadastrado (ex: `1`)
 
-### Opção 2: Docker (Recomendado para Produção)
+## 📁 Estrutura
 
-1. Instalar [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-2. Abrir terminal na pasta do sistema
-3. Executar: `docker-compose up -d`
-4. Acessar: `http://localhost:3000`
+```
+├── backend/           # API FastAPI + MongoDB
+├── frontend/          # React + Tailwind CSS
+├── license-server/    # Servidor de licenças (opcional)
+├── INICIAR_SISTEMA.bat    # Inicia tudo automaticamente
+├── start_backend.bat      # Inicia só backend
+├── start_frontend.bat     # Inicia só frontend
+└── GUIA_INSTALACAO_COMPLETO.md  # Manual completo
+```
 
----
+## 📞 Suporte
 
-## 📞 Suporte Técnico
-
-**Japão Informática**  
-📱 Telefone/WhatsApp: **(19) 99813-2220**
-
----
-
-**Desenvolvido com ❤️ pela Japão Informática**
+**Japão Informática**
+- Telefone: (19) 99813-2220
+- Email: japaoinformatica@yahoo.com.br
