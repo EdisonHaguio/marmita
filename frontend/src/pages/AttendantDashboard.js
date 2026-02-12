@@ -287,6 +287,10 @@ export default function AttendantDashboard({ user, onLogout }) {
       setSelectedProtein("");
       setSelectedSalads([]);
       setSelectedBeverages([]);
+      setSelectedCoffees([]);
+      setSelectedSnacks([]);
+      setSelectedDesserts([]);
+      setSelectedOthers([]);
       setObservations("");
       setOrderType("BALCAO");
       setSize("M");
