@@ -657,7 +657,7 @@ export default function AttendantDashboard({ user, onLogout }) {
               {/* Beverages */}
               {beverages.length > 0 && (
                 <div className="bg-white rounded-2xl p-6 shadow-warm">
-                  <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">Bebidas (Opcional)</h2>
+                  <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">🥤 Bebidas (Opcional)</h2>
                   <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
                     {beverages.map((beverage) => (
                       <button
@@ -672,6 +672,102 @@ export default function AttendantDashboard({ user, onLogout }) {
                       >
                         <span>{beverage.name}</span>
                         <span className="text-sm opacity-80">+ R$ {(beverage.price || 0).toFixed(2)}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Coffees */}
+              {coffees.length > 0 && (
+                <div className="bg-white rounded-2xl p-6 shadow-warm">
+                  <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">☕ Cafés (Opcional)</h2>
+                  <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {coffees.map((coffee) => (
+                      <button
+                        key={coffee.id}
+                        data-testid={`coffee-${coffee.name.toLowerCase().replace(/\s/g, '-')}`}
+                        onClick={() => toggleCoffee(coffee.name)}
+                        className={`h-16 rounded-xl border-2 transition-all flex items-center justify-between px-4 font-medium ${
+                          selectedCoffees.includes(coffee.name)
+                            ? "border-amber-600 bg-amber-600 text-white shadow-lg"
+                            : "border-orange-200 bg-white text-secondary hover:border-primary"
+                        }`}
+                      >
+                        <span>{coffee.name}</span>
+                        <span className="text-sm opacity-80">+ R$ {(coffee.price || 0).toFixed(2)}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Snacks */}
+              {snacks.length > 0 && (
+                <div className="bg-white rounded-2xl p-6 shadow-warm">
+                  <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">🥪 Lanches (Opcional)</h2>
+                  <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {snacks.map((snack) => (
+                      <button
+                        key={snack.id}
+                        data-testid={`snack-${snack.name.toLowerCase().replace(/\s/g, '-')}`}
+                        onClick={() => toggleSnack(snack.name)}
+                        className={`h-16 rounded-xl border-2 transition-all flex items-center justify-between px-4 font-medium ${
+                          selectedSnacks.includes(snack.name)
+                            ? "border-yellow-600 bg-yellow-600 text-white shadow-lg"
+                            : "border-orange-200 bg-white text-secondary hover:border-primary"
+                        }`}
+                      >
+                        <span>{snack.name}</span>
+                        <span className="text-sm opacity-80">+ R$ {(snack.price || 0).toFixed(2)}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Desserts */}
+              {desserts.length > 0 && (
+                <div className="bg-white rounded-2xl p-6 shadow-warm">
+                  <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">🍰 Sobremesas (Opcional)</h2>
+                  <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {desserts.map((dessert) => (
+                      <button
+                        key={dessert.id}
+                        data-testid={`dessert-${dessert.name.toLowerCase().replace(/\s/g, '-')}`}
+                        onClick={() => toggleDessert(dessert.name)}
+                        className={`h-16 rounded-xl border-2 transition-all flex items-center justify-between px-4 font-medium ${
+                          selectedDesserts.includes(dessert.name)
+                            ? "border-pink-500 bg-pink-500 text-white shadow-lg"
+                            : "border-orange-200 bg-white text-secondary hover:border-primary"
+                        }`}
+                      >
+                        <span>{dessert.name}</span>
+                        <span className="text-sm opacity-80">+ R$ {(dessert.price || 0).toFixed(2)}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Others */}
+              {others.length > 0 && (
+                <div className="bg-white rounded-2xl p-6 shadow-warm">
+                  <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">📦 Outros (Opcional)</h2>
+                  <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {others.map((other) => (
+                      <button
+                        key={other.id}
+                        data-testid={`other-${other.name.toLowerCase().replace(/\s/g, '-')}`}
+                        onClick={() => toggleOther(other.name)}
+                        className={`h-16 rounded-xl border-2 transition-all flex items-center justify-between px-4 font-medium ${
+                          selectedOthers.includes(other.name)
+                            ? "border-gray-600 bg-gray-600 text-white shadow-lg"
+                            : "border-orange-200 bg-white text-secondary hover:border-primary"
+                        }`}
+                      >
+                        <span>{other.name}</span>
+                        <span className="text-sm opacity-80">+ R$ {(other.price || 0).toFixed(2)}</span>
                       </button>
                     ))}
                   </div>
