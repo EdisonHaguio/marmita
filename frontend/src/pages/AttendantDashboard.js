@@ -166,6 +166,38 @@ export default function AttendantDashboard({ user, onLogout }) {
         total += beverage.price || 0;
       }
     });
+
+    // Add coffee prices
+    selectedCoffees.forEach(coffeeName => {
+      const coffee = products.find(p => p.name === coffeeName && p.type === "coffee");
+      if (coffee) {
+        total += coffee.price || 0;
+      }
+    });
+
+    // Add snack prices
+    selectedSnacks.forEach(snackName => {
+      const snack = products.find(p => p.name === snackName && p.type === "snack");
+      if (snack) {
+        total += snack.price || 0;
+      }
+    });
+
+    // Add dessert prices
+    selectedDesserts.forEach(dessertName => {
+      const dessert = products.find(p => p.name === dessertName && p.type === "dessert");
+      if (dessert) {
+        total += dessert.price || 0;
+      }
+    });
+
+    // Add other product prices
+    selectedOthers.forEach(otherName => {
+      const other = products.find(p => p.name === otherName && p.type === "other");
+      if (other) {
+        total += other.price || 0;
+      }
+    });
     
     return total;
   };
