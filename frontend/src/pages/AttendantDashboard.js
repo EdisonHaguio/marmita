@@ -161,17 +161,35 @@ export default function AttendantDashboard({ user, onLogout }) {
   const calculateTotal = () => {
     let total = 0;
     
-    // Calculate marmitas prices (soma de todas as proteínas)
+    // Calculate marmitas prices
+    // P = cobra 1 proteína, M/G = cobra apenas a mais cara (segunda é grátis)
     cartItems.forEach(item => {
-      // item.proteins é um array de proteínas
-      const proteinsArray = item.proteins || [item.protein];  // compatibilidade com formato antigo
-      proteinsArray.forEach(proteinName => {
-        const proteinProduct = products.find(p => p.name === proteinName);
-        if (proteinProduct) {
-          const priceKey = `price_${item.size.toLowerCase()}`;
-          total += proteinProduct[priceKey] || 0;
-        }
-      });
+      const proteinsArray = item.proteins || [item.protein];
+      
+      if (item.size === "P") {
+        // Tamanho P: cobra a única proteína
+        proteinsArray.forEach(proteinName => {
+          const proteinProduct = products.find(p => p.name === proteinName);
+          if (proteinProduct) {
+            const priceKey = `price_${item.size.toLowerCase()}`;
+            total += proteinProduct[priceKey] || 0;
+          }
+        });
+      } else {
+        // Tamanho M ou G: cobra apenas a mais cara (segunda é grátis)
+        let maxPrice = 0;
+        proteinsArray.forEach(proteinName => {
+          const proteinProduct = products.find(p => p.name === proteinName);
+          if (proteinProduct) {
+            const priceKey = `price_${item.size.toLowerCase()}`;
+            const price = proteinProduct[priceKey] || 0;
+            if (price > maxPrice) {
+              maxPrice = price;
+            }
+          }
+        });
+        total += maxPrice;
+      }
     });
     
     // Add salad prices
