@@ -1056,22 +1056,48 @@ export default function AttendantDashboard({ user, onLogout }) {
                              order.status === "preparing" ? "Preparando" :
                              order.status === "ready" ? "Pronto" : "Entregue"}
                           </span>
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            order.payment_method === "DINHEIRO" ? "bg-green-100 text-green-700" :
+                            order.payment_method === "PIX" ? "bg-purple-100 text-purple-700" :
+                            order.payment_method === "CARTAO" ? "bg-blue-100 text-blue-700" :
+                            "bg-yellow-100 text-yellow-700"
+                          }`}>
+                            {order.payment_method || "DINHEIRO"}
+                          </span>
                         </div>
                         <p className="font-semibold text-secondary">{order.customer_name}</p>
                         <p className="text-sm text-secondary-light">
-                          {order.size} | {order.protein} | {order.order_type}
+                          {(order.items || []).length} marmita(s) | {order.order_type}
                         </p>
-                        <p className="text-sm font-medium text-primary mt-1">R$ {order.total_price.toFixed(2)}</p>
+                        <p className="text-sm font-medium text-primary mt-1">
+                          R$ {(order.total_price || 0).toFixed(2)}
+                          {order.payment_method === "DINHEIRO" && order.change_amount > 0 && (
+                            <span className="ml-2 text-accent-green">(Troco: R$ {order.change_amount.toFixed(2)})</span>
+                          )}
+                        </p>
                       </div>
-                      <Button
-                        data-testid={`print-order-${order.order_number}`}
-                        onClick={() => handlePrintOrder(order.id)}
-                        size="sm"
-                        variant="outline"
-                        className="border-primary text-primary hover:bg-primary hover:text-white"
-                      >
-                        <Printer className="w-4 h-4" />
-                      </Button>
+                      <div className="flex flex-col gap-2">
+                        <Button
+                          data-testid={`view-receipt-${order.order_number}`}
+                          onClick={() => handleViewReceipt(order.id)}
+                          size="sm"
+                          variant="outline"
+                          className="border-secondary text-secondary hover:bg-secondary hover:text-white"
+                        >
+                          <Eye className="w-4 h-4 mr-1" />
+                          Ver
+                        </Button>
+                        <Button
+                          data-testid={`reprint-order-${order.order_number}`}
+                          onClick={() => handleReprintOrder(order.id)}
+                          size="sm"
+                          variant="outline"
+                          className="border-primary text-primary hover:bg-primary hover:text-white"
+                        >
+                          <Printer className="w-4 h-4 mr-1" />
+                          2a Via
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))
@@ -1080,6 +1106,49 @@ export default function AttendantDashboard({ user, onLogout }) {
           </div>
         )}
       </div>
+
+      {/* Receipt Preview Modal */}
+      {showReceiptModal && receiptPreview && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full max-h-[80vh] overflow-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-semibold text-secondary">Cupom #{receiptPreview.order_number}</h3>
+              <Button
+                onClick={() => setShowReceiptModal(false)}
+                variant="outline"
+                size="sm"
+              >
+                Fechar
+              </Button>
+            </div>
+            <pre className="bg-gray-100 p-4 rounded-xl text-xs font-mono whitespace-pre-wrap overflow-x-auto">
+              {receiptPreview.receipt}
+            </pre>
+            <div className="mt-4 flex gap-2">
+              <Button
+                onClick={() => {
+                  navigator.clipboard.writeText(receiptPreview.receipt);
+                  toast.success("Cupom copiado!");
+                }}
+                variant="outline"
+                className="flex-1"
+              >
+                Copiar
+              </Button>
+              <Button
+                onClick={() => {
+                  const orderId = myOrders.find(o => o.order_number === receiptPreview.order_number)?.id;
+                  if (orderId) handleReprintOrder(orderId);
+                }}
+                className="flex-1 bg-primary hover:bg-primary-hover text-white"
+              >
+                <Printer className="w-4 h-4 mr-2" />
+                Imprimir
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
