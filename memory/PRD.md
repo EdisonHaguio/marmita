@@ -18,13 +18,18 @@ Sistema completo de gerenciamento de pedidos para marmitaria, desenvolvido com F
   - Acompanhamentos
   - Bebidas (preço único)
   - Saladas (preço único)
+  - **☕ Cafés** (preço único) - NOVO
+  - **🥪 Lanches** (preço único) - NOVO
+  - **🍕 Pizzas** (preços P/M/G) - NOVO
+  - **🍰 Sobremesas** (preço único) - NOVO
+  - **📦 Outros** (preço único) - NOVO
 - Configurações do sistema (logo, impressora, dados da empresa)
 
 ### Painel do Atendente
 - Carrinho de múltiplas marmitas por pedido
 - Seleção de tamanho (P/M/G)
 - Seleção de acompanhamentos e proteínas
-- Adição de bebidas e saladas opcionais
+- Adição de bebidas, saladas, cafés, lanches, sobremesas e outros
 - Cálculo automático do preço total
 - Pedidos normais e para empresas (com nome do funcionário)
 - Tipos de pedido: Balcão ou Entrega
@@ -49,8 +54,10 @@ Sistema completo de gerenciamento de pedidos para marmitaria, desenvolvido com F
 - **Database:** MongoDB
 - **Licenciamento:** Node.js/Express (serviço separado)
 
-## Correções Aplicadas (11/02/2025)
-- Corrigido erro de renderização React "insertBefore" usando IDs únicos como key em listas
+## Correções Aplicadas
+- 11/02/2025: Corrigido erro de renderização React "insertBefore" usando IDs únicos como key em listas
+- 12/02/2025: Removido `emergentintegrations` do requirements.txt (não necessário para este projeto)
+- 12/02/2025: Adicionados novos tipos de produtos (Café, Lanche, Pizza, Sobremesa, Outro)
 
 ## Status: COMPLETO E FUNCIONAL
 
