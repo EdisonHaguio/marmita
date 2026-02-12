@@ -110,6 +110,10 @@ class Order(BaseModel):
     items: List[OrderItem] = []  # Multiple marmitas
     salads: List[str] = []  # Shared salads
     beverages: List[str] = []  # Shared beverages
+    coffees: List[str] = []  # Cafés
+    snacks: List[str] = []  # Lanches
+    desserts: List[str] = []  # Sobremesas
+    others: List[str] = []  # Outros produtos
     observations: Optional[str] = None
     total_price: float
     status: str = "pending"
@@ -126,6 +130,10 @@ class OrderCreate(BaseModel):
     items: List[OrderItem]
     salads: List[str] = []
     beverages: List[str] = []
+    coffees: List[str] = []
+    snacks: List[str] = []
+    desserts: List[str] = []
+    others: List[str] = []
     observations: Optional[str] = None
     total_price: float
     attendant_code: str
