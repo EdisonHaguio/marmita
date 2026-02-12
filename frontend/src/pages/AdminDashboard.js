@@ -4,7 +4,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { toast } from "sonner";
-import { LogOut, Users, UtensilsCrossed, Settings, Plus, Trash2, Eye, EyeOff } from "lucide-react";
+import { LogOut, Users, UtensilsCrossed, Settings, Plus, Trash2, Eye, EyeOff, BarChart3 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -18,11 +18,13 @@ export default function AdminDashboard({ user, onLogout }) {
   const [users, setUsers] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [settings, setSettings] = useState({});
+  const [orders, setOrders] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadData();
-  }, [view]);
+  }, [view, selectedDate]);
 
   const loadData = async () => {
     try {
@@ -38,6 +40,9 @@ export default function AdminDashboard({ user, onLogout }) {
       } else if (view === "settings") {
         const res = await axiosInstance.get("/settings");
         setSettings(res.data);
+      } else if (view === "reports") {
+        const res = await axiosInstance.get("/orders");
+        setOrders(res.data);
       }
     } catch (error) {
       toast.error("Erro ao carregar dados");
