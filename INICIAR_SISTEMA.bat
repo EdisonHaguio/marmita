@@ -1,70 +1,59 @@
 @echo off
+chcp 65001 >nul
+title Dona Guedes - Sistema
 color 0A
-title Sistema Dona Guedes - Inicializacao Completa
 
 echo.
-echo  =====================================================
-echo        SISTEMA DONA GUEDES - Japao Informatica
-echo        Contato: (19) 99813-2220
-echo  =====================================================
+echo ╔══════════════════════════════════════════════════════════════╗
+echo ║     Sistema Dona Guedes - Japao Informatica                  ║
+echo ║     Contato: (19) 99813-2220                                 ║
+echo ╚══════════════════════════════════════════════════════════════╝
 echo.
 
-echo [1/4] Verificando MongoDB...
-sc query MongoDB | find "RUNNING" >nul
-if errorlevel 1 (
-    echo MongoDB nao esta rodando. Tentando iniciar...
-    net start MongoDB >nul 2>&1
-    if errorlevel 1 (
-        echo.
-        echo ATENCAO: MongoDB nao encontrado ou nao iniciou!
-        echo.
-        echo Opcoes:
-        echo 1. Instalar MongoDB: https://www.mongodb.com/try/download/community
-        echo 2. Ou usar Docker Desktop (recomendado)
-        echo.
-        pause
-        exit /b 1
-    )
-    echo MongoDB iniciado com sucesso!
-) else (
-    echo MongoDB ja esta rodando!
+:: Verificar se foi instalado
+if not exist "%~dp0backend\venv" (
+    echo ERRO: Sistema nao instalado!
+    echo Execute primeiro: INSTALAR.bat
+    pause
+    exit /b 1
 )
 
-echo.
-echo [2/4] Iniciando Backend (porta 8001)...
-start "Dona Guedes - Backend" /MIN cmd /k "%~dp0start_backend.bat"
-timeout /t 8 /nobreak >nul
-
-echo [3/4] Testando Backend...
-curl -s http://localhost:8001/api/ >nul 2>&1
-if errorlevel 1 (
-    echo AVISO: Backend ainda nao respondeu. Aguardando...
-    timeout /t 5 /nobreak >nul
+if not exist "%~dp0frontend\node_modules" (
+    echo ERRO: Sistema nao instalado!
+    echo Execute primeiro: INSTALAR.bat
+    pause
+    exit /b 1
 )
-echo Backend OK!
+
+echo [1/3] Iniciando Backend...
+start "Dona Guedes - Backend" cmd /k "cd /d "%~dp0backend" && venv\Scripts\activate && python -m uvicorn server:app --host 0.0.0.0 --port 8001"
+
+echo       Aguardando backend iniciar...
+timeout /t 5 /nobreak >nul
 
 echo.
-echo [4/4] Iniciando Frontend (porta 3000)...
-start "Dona Guedes - Frontend" /MIN cmd /k "%~dp0start_frontend.bat"
+echo [2/3] Iniciando Frontend...
+start "Dona Guedes - Frontend" cmd /k "cd /d "%~dp0frontend" && set REACT_APP_BACKEND_URL=http://localhost:8001 && npm start"
+
+echo       Aguardando frontend iniciar...
+timeout /t 10 /nobreak >nul
 
 echo.
-echo =====================================================
-echo   SISTEMA INICIADO COM SUCESSO!
-echo =====================================================
-echo.
-echo   Acesse: http://localhost:3000
-echo.
-echo   Login Admin: admin / admin123
-echo   Login Funcionario: usar codigo cadastrado
-echo.
-echo   Feche esta janela para manter o sistema rodando.
-echo   Para parar: feche as janelas Backend e Frontend.
-echo =====================================================
-echo.
-
-timeout /t 15 >nul
+echo [3/3] Abrindo navegador...
 start http://localhost:3000
 
-:loop
-timeout /t 60 >nul
-goto loop
+echo.
+echo ╔══════════════════════════════════════════════════════════════╗
+echo ║     SISTEMA INICIADO!                                        ║
+echo ║                                                              ║
+echo ║     Acesse: http://localhost:3000                            ║
+echo ║                                                              ║
+echo ║     Login Admin: admin / admin123                            ║
+echo ║     Login Funcionario: usar codigo cadastrado                ║
+echo ║                                                              ║
+echo ║     NAO FECHE ESTA JANELA!                                   ║
+echo ║     Para parar: feche as janelas Backend e Frontend          ║
+echo ╚══════════════════════════════════════════════════════════════╝
+echo.
+
+pause
