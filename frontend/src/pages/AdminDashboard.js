@@ -179,6 +179,7 @@ export default function AdminDashboard({ user, onLogout }) {
         {view === "products" && <ProductsTab products={products} onRefresh={loadData} />}
         {view === "customers" && <CustomersTab customers={customers} onRefresh={loadData} />}
         {view === "users" && <UsersTab users={users} onDelete={deleteUser} onRefresh={loadData} />}
+        {view === "reports" && <ReportsTab orders={orders} products={products} selectedDate={selectedDate} setSelectedDate={setSelectedDate} />}
         {view === "settings" && <SettingsTab settings={settings} setSettings={setSettings} onSubmit={updateSettings} loading={loading} />}
       </div>
     </div>
