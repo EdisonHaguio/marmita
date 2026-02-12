@@ -250,6 +250,11 @@ function ProductsTab({ products, onRefresh }) {
                   <option value="protein">Mistura (Proteína)</option>
                   <option value="salad">Salada</option>
                   <option value="beverage">Bebida</option>
+                  <option value="coffee">Café</option>
+                  <option value="snack">Lanche</option>
+                  <option value="pizza">Pizza</option>
+                  <option value="dessert">Sobremesa</option>
+                  <option value="other">Outro</option>
                 </select>
               </div>
               {formData.type === "protein" && (
