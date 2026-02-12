@@ -33,8 +33,13 @@ export default function AttendantDashboard({ user, onLogout }) {
   // Current marmita being added
   const [size, setSize] = useState("M");
   const [selectedAccompaniments, setSelectedAccompaniments] = useState([]);
-  const [selectedProtein, setSelectedProtein] = useState("");
+  const [selectedProteins, setSelectedProteins] = useState([]);  // Array para múltiplas proteínas
   const [employeeName, setEmployeeName] = useState("");  // Para pedidos de empresa
+  
+  // Quantidade máxima de proteínas por tamanho
+  const getMaxProteins = (marmitaSize) => {
+    return marmitaSize === "P" ? 1 : 2;  // P=1, M=2, G=2
+  };
   
   // Cart of marmitas
   const [cartItems, setCartItems] = useState([]);
