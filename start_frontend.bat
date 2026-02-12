@@ -23,7 +23,13 @@ echo.
 if not exist "node_modules" (
     echo Instalando dependencias pela primeira vez...
     echo Isso pode demorar alguns minutos...
-    call npm install
+    echo.
+    call npm install --legacy-peer-deps
+    if errorlevel 1 (
+        echo.
+        echo Tentando instalacao alternativa...
+        call npm install --force
+    )
 ) else (
     echo Dependencias ja instaladas!
 )
