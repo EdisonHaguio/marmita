@@ -161,13 +161,17 @@ export default function AttendantDashboard({ user, onLogout }) {
   const calculateTotal = () => {
     let total = 0;
     
-    // Calculate marmitas prices
+    // Calculate marmitas prices (soma de todas as proteínas)
     cartItems.forEach(item => {
-      const proteinProduct = products.find(p => p.name === item.protein);
-      if (proteinProduct) {
-        const priceKey = `price_${item.size.toLowerCase()}`;
-        total += proteinProduct[priceKey] || 0;
-      }
+      // item.proteins é um array de proteínas
+      const proteinsArray = item.proteins || [item.protein];  // compatibilidade com formato antigo
+      proteinsArray.forEach(proteinName => {
+        const proteinProduct = products.find(p => p.name === proteinName);
+        if (proteinProduct) {
+          const priceKey = `price_${item.size.toLowerCase()}`;
+          total += proteinProduct[priceKey] || 0;
+        }
+      });
     });
     
     // Add salad prices
