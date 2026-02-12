@@ -52,6 +52,8 @@ export default function AttendantDashboard({ user, onLogout }) {
   const [selectedDesserts, setSelectedDesserts] = useState([]);
   const [selectedOthers, setSelectedOthers] = useState([]);
   const [observations, setObservations] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("DINHEIRO");
+  const [amountPaid, setAmountPaid] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
