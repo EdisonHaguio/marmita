@@ -103,6 +103,30 @@ export default function AttendantDashboard({ user, onLogout }) {
     );
   };
 
+  const toggleCoffee = (name) => {
+    setSelectedCoffees(prev => 
+      prev.includes(name) ? prev.filter(c => c !== name) : [...prev, name]
+    );
+  };
+
+  const toggleSnack = (name) => {
+    setSelectedSnacks(prev => 
+      prev.includes(name) ? prev.filter(s => s !== name) : [...prev, name]
+    );
+  };
+
+  const toggleDessert = (name) => {
+    setSelectedDesserts(prev => 
+      prev.includes(name) ? prev.filter(d => d !== name) : [...prev, name]
+    );
+  };
+
+  const toggleOther = (name) => {
+    setSelectedOthers(prev => 
+      prev.includes(name) ? prev.filter(o => o !== name) : [...prev, name]
+    );
+  };
+
   const selectCustomer = (customer) => {
     setCustomerName(customer.name);
     if (customer.address) {
