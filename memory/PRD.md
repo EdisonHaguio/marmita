@@ -1,45 +1,78 @@
 # Sistema Dona Guedes - Marmitaria
 
-## Requisitos
-- Python 3.11+
-- Node.js 18+
-- MongoDB
+## Status: COMPLETO
 
-## Funcionalidades Implementadas
+## Versões Disponíveis
+
+### 1. Versão Online (Preview)
+- URL: https://marmitex-3.preview.emergentagent.com
+- Usa MongoDB
+- Requer internet
+
+### 2. Versão Offline (Desktop)
+- Pasta: `/app/desktop/`
+- Usa SQLite (não precisa instalar banco)
+- Funciona 100% offline
+- Gera executável .exe único
+
+## Funcionalidades
 
 ### Autenticação
 - Login por código (atendentes)
-- Login com senha (admin)
+- Login com senha (admin: admin/admin123)
 
 ### Produtos
-- Marmitas (P/M/G) com múltiplas proteínas
-- Acompanhamentos, Bebidas, Saladas
-- Cafés, Lanches, Pizzas, Sobremesas, Outros
+- Marmitas P/M/G
+- Acompanhamentos
+- Bebidas, Cafés, Saladas
+- Lanches, Pizzas, Sobremesas
+- Outros produtos
 
-### Regra de Negócio - Marmitas
-- **P** = 1 proteína (cobra preço da proteína)
-- **M** = 2 proteínas (cobra apenas a mais cara)
-- **G** = 2 proteínas (cobra apenas a mais cara)
+### Regra de Marmitas
+- P = 1 proteína
+- M = 2 proteínas (2ª grátis)
+- G = 2 proteínas (2ª grátis)
 
 ### Pagamento
-- Dinheiro (com cálculo de troco)
+- Dinheiro (com troco automático)
 - PIX
 - Cartão
 - Fiado
 
 ### Impressão
-- Impressora ESC/POS (Tanca T650)
-- Impressora padrão Windows
+- ESC/POS (Tanca T650)
+- Windows (impressora padrão)
 - Segunda via
-- Cupom individual para empresas
+- Cupom individual por funcionário
 
 ### Relatórios
-- Vendas diárias por data
-- Total de pedidos e faturamento
-- Marmitas por tamanho
-- Vendas por atendente
-- Lista detalhada de pedidos
+- Vendas por dia
+- Total de pedidos
+- Faturamento
+- Por atendente
+- Por tamanho de marmita
 
-## Status: COMPLETO
+## Como Criar o Instalador .exe
 
-## Atualizado: 12/02/2026
+1. No Windows, abra a pasta `desktop`
+2. Execute `CRIAR_INSTALADOR.bat`
+3. Aguarde terminar
+4. O arquivo `DonaGuedes.exe` estará em `dist\`
+
+## Arquivos
+
+```
+/app/
+├── backend/           # API Online (MongoDB)
+├── frontend/          # Interface React
+├── desktop/           # Versão Offline
+│   ├── server_offline.py    # API SQLite
+│   ├── static/              # Frontend compilado
+│   ├── dona_guedes.db       # Banco de dados
+│   └── CRIAR_INSTALADOR.bat # Gera o .exe
+└── memory/
+    └── PRD.md
+```
+
+## Suporte
+Japão Informática - (19) 99813-2220
