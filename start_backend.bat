@@ -8,6 +8,18 @@ echo.
 
 cd /d "%~dp0backend"
 
+echo Verificando Python...
+python --version >nul 2>&1
+if errorlevel 1 (
+    echo ERRO: Python nao encontrado!
+    echo Baixe em: https://www.python.org/downloads/
+    pause
+    exit /b 1
+)
+
+echo Python encontrado!
+echo.
+
 echo Verificando ambiente virtual...
 if not exist "venv" (
     echo Criando ambiente virtual...

@@ -17,8 +17,16 @@ if errorlevel 1 (
     exit /b 1
 )
 
-echo Instalando/Atualizando dependencias...
-call yarn install
+echo Node.js encontrado!
+echo.
+
+if not exist "node_modules" (
+    echo Instalando dependencias pela primeira vez...
+    echo Isso pode demorar alguns minutos...
+    call npm install
+) else (
+    echo Dependencias ja instaladas!
+)
 
 echo.
 echo Iniciando frontend na porta 3000...
@@ -26,6 +34,6 @@ echo Aguarde o navegador abrir automaticamente...
 echo.
 
 set REACT_APP_BACKEND_URL=http://localhost:8001
-call yarn start
+call npm start
 
 pause
