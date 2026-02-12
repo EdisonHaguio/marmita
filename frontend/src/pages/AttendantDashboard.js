@@ -331,7 +331,7 @@ export default function AttendantDashboard({ user, onLogout }) {
       setDeliveryAddress("");
       setCartItems([]);
       setSelectedAccompaniments([]);
-      setSelectedProtein("");
+      setSelectedProteins([]);
       setSelectedSalads([]);
       setSelectedBeverages([]);
       setSelectedCoffees([]);
@@ -339,6 +339,8 @@ export default function AttendantDashboard({ user, onLogout }) {
       setSelectedDesserts([]);
       setSelectedOthers([]);
       setObservations("");
+      setPaymentMethod("DINHEIRO");
+      setAmountPaid("");
       setOrderType("BALCAO");
       setSize("M");
     } catch (error) {
@@ -351,7 +353,7 @@ export default function AttendantDashboard({ user, onLogout }) {
   const handlePrintOrder = async (orderId) => {
     try {
       await axiosInstance.post(`/orders/${orderId}/print`);
-      toast.success("Pedido enviado para impressão!");
+      toast.success("Pedido enviado para impressao!");
     } catch (error) {
       toast.error("Erro ao imprimir");
     }
