@@ -317,6 +317,53 @@ function ProductsTab({ products, onRefresh }) {
                   />
                 </div>
               )}
+              {(formData.type === "coffee" || formData.type === "snack" || formData.type === "dessert" || formData.type === "other") && (
+                <div>
+                  <label className="block text-sm font-medium mb-2">Preço (fixo)</label>
+                  <Input
+                    data-testid="product-price-fixed-input"
+                    type="number"
+                    step="0.01"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                    placeholder="5.00"
+                  />
+                </div>
+              )}
+              {formData.type === "pizza" && (
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <label className="block text-xs font-medium mb-1">Preço P</label>
+                    <Input
+                      data-testid="product-pizza-price-p-input"
+                      type="number"
+                      step="0.01"
+                      value={formData.price_p}
+                      onChange={(e) => setFormData({ ...formData, price_p: parseFloat(e.target.value) })}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium mb-1">Preço M</label>
+                    <Input
+                      data-testid="product-pizza-price-m-input"
+                      type="number"
+                      step="0.01"
+                      value={formData.price_m}
+                      onChange={(e) => setFormData({ ...formData, price_m: parseFloat(e.target.value) })}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium mb-1">Preço G</label>
+                    <Input
+                      data-testid="product-pizza-price-g-input"
+                      type="number"
+                      step="0.01"
+                      value={formData.price_g}
+                      onChange={(e) => setFormData({ ...formData, price_g: parseFloat(e.target.value) })}
+                    />
+                  </div>
+                </div>
+              )}
               <Button data-testid="submit-product-button" type="submit" className="w-full bg-primary hover:bg-primary-hover text-white">
                 Criar Produto
               </Button>
