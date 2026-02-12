@@ -1,67 +1,45 @@
-# Sistema de Pedidos - Dona Guedes Marmitaria
+# Sistema Dona Guedes - Marmitaria
 
-## Visão Geral
-Sistema completo de gerenciamento de pedidos para marmitaria, desenvolvido com FastAPI (backend), React (frontend) e MongoDB.
+## Requisitos
+- Python 3.11+
+- Node.js 18+
+- MongoDB
 
 ## Funcionalidades Implementadas
 
 ### Autenticação
-- Login por código para atendentes
-- Login com código e senha para administrador
-- Credenciais: Admin (admin/admin123), Atendente (código numérico)
+- Login por código (atendentes)
+- Login com senha (admin)
 
-### Painel de Administração
-- Gerenciamento de Usuários (criar/editar/excluir atendentes)
-- Gerenciamento de Clientes (pessoa física e empresas)
-- Gerenciamento de Produtos:
-  - Marmitas (proteínas com preços P/M/G)
-  - Acompanhamentos
-  - Bebidas (preço único)
-  - Saladas (preço único)
-  - **☕ Cafés** (preço único) - NOVO
-  - **🥪 Lanches** (preço único) - NOVO
-  - **🍕 Pizzas** (preços P/M/G) - NOVO
-  - **🍰 Sobremesas** (preço único) - NOVO
-  - **📦 Outros** (preço único) - NOVO
-- Configurações do sistema (logo, impressora, dados da empresa)
+### Produtos
+- Marmitas (P/M/G) com múltiplas proteínas
+- Acompanhamentos, Bebidas, Saladas
+- Cafés, Lanches, Pizzas, Sobremesas, Outros
 
-### Painel do Atendente
-- Carrinho de múltiplas marmitas por pedido
-- Seleção de tamanho (P/M/G)
-- Seleção de acompanhamentos e proteínas
-- Adição de bebidas, saladas, cafés, lanches, sobremesas e outros
-- Cálculo automático do preço total
-- Pedidos normais e para empresas (com nome do funcionário)
-- Tipos de pedido: Balcão ou Entrega
+### Regra de Negócio - Marmitas
+- **P** = 1 proteína (cobra preço da proteína)
+- **M** = 2 proteínas (cobra apenas a mais cara)
+- **G** = 2 proteínas (cobra apenas a mais cara)
 
-### Tela da Cozinha
-- Exibição de pedidos ativos para preparo
-- Atualização de status dos pedidos
+### Pagamento
+- Dinheiro (com cálculo de troco)
+- PIX
+- Cartão
+- Fiado
 
-### Sistema de Impressão
-- Suporte para impressora ESC/POS (Tanca T650)
-- Suporte para impressora padrão do Windows
-- Cupons individuais para pedidos de empresas
+### Impressão
+- Impressora ESC/POS (Tanca T650)
+- Impressora padrão Windows
+- Segunda via
+- Cupom individual para empresas
 
-### Sistema de Licenciamento
-- Servidor de licenças em Node.js separado
-- Verificação de licença na inicialização e login
-- Painel de gerenciamento de licenças (admin-panel.html)
+### Relatórios
+- Vendas diárias por data
+- Total de pedidos e faturamento
+- Marmitas por tamanho
+- Vendas por atendente
+- Lista detalhada de pedidos
 
-## Arquitetura Técnica
-- **Backend:** FastAPI + MongoDB + JWT Auth
-- **Frontend:** React + Tailwind CSS + Shadcn/UI
-- **Database:** MongoDB
-- **Licenciamento:** Node.js/Express (serviço separado)
+## Status: COMPLETO
 
-## Correções Aplicadas
-- 11/02/2025: Corrigido erro de renderização React "insertBefore" usando IDs únicos como key em listas
-- 12/02/2025: Removido `emergentintegrations` do requirements.txt (não necessário para este projeto)
-- 12/02/2025: Adicionados novos tipos de produtos (Café, Lanche, Pizza, Sobremesa, Outro)
-
-## Status: COMPLETO E FUNCIONAL
-
-## Backlog/Melhorias Futuras
-- P2: Tornar painel de licenças (admin-panel.html) funcional com API real
-- P3: Relatórios de vendas e estatísticas
-- P3: Histórico de pedidos com filtros avançados
+## Atualizado: 12/02/2026
