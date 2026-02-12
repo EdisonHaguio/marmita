@@ -1061,3 +1061,160 @@ function SettingsTab({ settings, setSettings, onSubmit, loading }) {
     </div>
   );
 }
+
+
+function ReportsTab({ orders, products, selectedDate, setSelectedDate }) {
+  // Filtrar pedidos do dia selecionado
+  const filteredOrders = orders.filter(order => {
+    const orderDate = new Date(order.created_at).toISOString().split('T')[0];
+    return orderDate === selectedDate;
+  });
+
+  // Calcular totais
+  const totalOrders = filteredOrders.length;
+  const totalRevenue = filteredOrders.reduce((sum, order) => sum + (order.total_price || 0), 0);
+  const completedOrders = filteredOrders.filter(o => o.status === "completed").length;
+  const pendingOrders = filteredOrders.filter(o => o.status === "pending").length;
+  const preparingOrders = filteredOrders.filter(o => o.status === "preparing").length;
+
+  // Contar marmitas por tamanho
+  const marmitasBySize = { P: 0, M: 0, G: 0 };
+  filteredOrders.forEach(order => {
+    (order.items || []).forEach(item => {
+      if (item.size && marmitasBySize[item.size] !== undefined) {
+        marmitasBySize[item.size]++;
+      }
+    });
+  });
+
+  // Vendas por atendente
+  const salesByAttendant = {};
+  filteredOrders.forEach(order => {
+    const name = order.attendant_name || "Desconhecido";
+    if (!salesByAttendant[name]) {
+      salesByAttendant[name] = { count: 0, total: 0 };
+    }
+    salesByAttendant[name].count++;
+    salesByAttendant[name].total += order.total_price || 0;
+  });
+
+  return (
+    <div className="space-y-6">
+      {/* Seletor de Data */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">Relatorio de Vendas</h3>
+        <div className="flex items-center gap-4">
+          <label className="text-sm font-medium text-secondary">Data:</label>
+          <Input
+            data-testid="report-date-input"
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="w-48"
+          />
+          <span className="text-sm text-secondary-light">
+            {new Date(selectedDate + 'T12:00:00').toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+          </span>
+        </div>
+      </div>
+
+      {/* Resumo do Dia */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-2xl p-6 shadow-warm text-center">
+          <p className="text-3xl font-bold text-primary">{totalOrders}</p>
+          <p className="text-sm text-secondary-light">Total de Pedidos</p>
+        </div>
+        <div className="bg-white rounded-2xl p-6 shadow-warm text-center">
+          <p className="text-3xl font-bold text-accent-green">R$ {totalRevenue.toFixed(2)}</p>
+          <p className="text-sm text-secondary-light">Faturamento</p>
+        </div>
+        <div className="bg-white rounded-2xl p-6 shadow-warm text-center">
+          <p className="text-3xl font-bold text-accent-blue">{completedOrders}</p>
+          <p className="text-sm text-secondary-light">Finalizados</p>
+        </div>
+        <div className="bg-white rounded-2xl p-6 shadow-warm text-center">
+          <p className="text-3xl font-bold text-yellow-500">{pendingOrders + preparingOrders}</p>
+          <p className="text-sm text-secondary-light">Em Andamento</p>
+        </div>
+      </div>
+
+      {/* Marmitas por Tamanho */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-lg font-outfit font-semibold text-secondary mb-4">Marmitas Vendidas por Tamanho</h3>
+        <div className="grid grid-cols-3 gap-4">
+          <div className="bg-green-50 rounded-xl p-4 text-center">
+            <p className="text-2xl font-bold text-accent-green">{marmitasBySize.P}</p>
+            <p className="text-sm text-secondary">Tamanho P</p>
+          </div>
+          <div className="bg-blue-50 rounded-xl p-4 text-center">
+            <p className="text-2xl font-bold text-accent-blue">{marmitasBySize.M}</p>
+            <p className="text-sm text-secondary">Tamanho M</p>
+          </div>
+          <div className="bg-orange-50 rounded-xl p-4 text-center">
+            <p className="text-2xl font-bold text-primary">{marmitasBySize.G}</p>
+            <p className="text-sm text-secondary">Tamanho G</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Vendas por Atendente */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-lg font-outfit font-semibold text-secondary mb-4">Vendas por Atendente</h3>
+        {Object.keys(salesByAttendant).length === 0 ? (
+          <p className="text-center text-secondary-light py-4">Nenhuma venda neste dia</p>
+        ) : (
+          <div className="space-y-2">
+            {Object.entries(salesByAttendant).map(([name, data]) => (
+              <div key={name} className="flex items-center justify-between p-4 bg-orange-50 rounded-xl">
+                <div>
+                  <p className="font-semibold text-secondary">{name}</p>
+                  <p className="text-sm text-secondary-light">{data.count} pedido(s)</p>
+                </div>
+                <p className="text-lg font-bold text-primary">R$ {data.total.toFixed(2)}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Lista de Pedidos do Dia */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-lg font-outfit font-semibold text-secondary mb-4">Pedidos do Dia ({filteredOrders.length})</h3>
+        {filteredOrders.length === 0 ? (
+          <p className="text-center text-secondary-light py-8">Nenhum pedido neste dia</p>
+        ) : (
+          <div className="space-y-3 max-h-96 overflow-y-auto">
+            {filteredOrders.map((order) => (
+              <div key={order.id} className="border border-orange-100 rounded-xl p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-3">
+                    <span className="font-mono font-bold text-primary">#{order.order_number}</span>
+                    <span className="font-semibold text-secondary">{order.customer_name}</span>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      order.status === "completed" ? "bg-green-100 text-green-700" :
+                      order.status === "preparing" ? "bg-yellow-100 text-yellow-700" :
+                      "bg-orange-100 text-orange-700"
+                    }`}>
+                      {order.status === "completed" ? "Finalizado" : 
+                       order.status === "preparing" ? "Preparando" : "Pendente"}
+                    </span>
+                  </div>
+                  <span className="text-lg font-bold text-primary">R$ {(order.total_price || 0).toFixed(2)}</span>
+                </div>
+                <div className="text-sm text-secondary-light">
+                  <span>{order.order_type}</span>
+                  <span className="mx-2">|</span>
+                  <span>{(order.items || []).length} marmita(s)</span>
+                  <span className="mx-2">|</span>
+                  <span>{new Date(order.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
+                  <span className="mx-2">|</span>
+                  <span>Atendente: {order.attendant_name}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
