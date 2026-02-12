@@ -96,7 +96,8 @@ class ProductUpdate(BaseModel):
 class OrderItem(BaseModel):
     employee_name: Optional[str] = None  # Nome do funcionário (para empresas)
     size: str  # P, M, G
-    protein: str
+    protein: Optional[str] = None  # Compatibilidade com formato antigo
+    proteins: List[str] = []  # Lista de proteínas (P=1, M/G=2)
     accompaniments: List[str] = []
 
 class Order(BaseModel):
