@@ -670,16 +670,32 @@ export default function AttendantDashboard({ user, onLogout }) {
                   </h2>
                   <div className="space-y-2">
                     {cartItems.map((item, index) => {
-                      // Calcula preço somando todas as proteínas
+                      // Calcula preço: P=soma tudo, M/G=apenas a mais cara
                       const proteinsArray = item.proteins || [item.protein];
                       let totalPrice = 0;
-                      proteinsArray.forEach(proteinName => {
-                        const proteinProduct = products.find(p => p.name === proteinName);
-                        if (proteinProduct) {
-                          const priceKey = `price_${item.size.toLowerCase()}`;
-                          totalPrice += proteinProduct[priceKey] || 0;
-                        }
-                      });
+                      
+                      if (item.size === "P") {
+                        proteinsArray.forEach(proteinName => {
+                          const proteinProduct = products.find(p => p.name === proteinName);
+                          if (proteinProduct) {
+                            const priceKey = `price_${item.size.toLowerCase()}`;
+                            totalPrice += proteinProduct[priceKey] || 0;
+                          }
+                        });
+                      } else {
+                        // M ou G: cobra apenas a mais cara
+                        proteinsArray.forEach(proteinName => {
+                          const proteinProduct = products.find(p => p.name === proteinName);
+                          if (proteinProduct) {
+                            const priceKey = `price_${item.size.toLowerCase()}`;
+                            const price = proteinProduct[priceKey] || 0;
+                            if (price > totalPrice) {
+                              totalPrice = price;
+                            }
+                          }
+                        });
+                      }
+                      
                       return (
                         <div
                           key={item.id}
