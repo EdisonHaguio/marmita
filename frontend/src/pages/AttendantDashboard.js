@@ -868,14 +868,69 @@ export default function AttendantDashboard({ user, onLogout }) {
 
               {/* Observations */}
               <div className="bg-white rounded-2xl p-6 shadow-warm">
-                <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">Observações</h2>
+                <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">Observacoes</h2>
                 <Textarea
                   data-testid="observations-input"
                   value={observations}
                   onChange={(e) => setObservations(e.target.value)}
-                  placeholder="Exemplo: sem cebola, molho à parte..."
+                  placeholder="Exemplo: sem cebola, molho a parte..."
                   className="min-h-24 border-orange-200"
                 />
+              </div>
+
+              {/* Payment */}
+              <div className="bg-white rounded-2xl p-6 shadow-warm">
+                <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">Pagamento</h2>
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  {["DINHEIRO", "PIX", "CARTAO", "FIADO"].map((method) => (
+                    <button
+                      key={method}
+                      data-testid={`payment-${method.toLowerCase()}`}
+                      onClick={() => setPaymentMethod(method)}
+                      className={`h-12 rounded-xl border-2 transition-all font-medium ${
+                        paymentMethod === method
+                          ? "border-accent-green bg-accent-green text-white shadow-lg"
+                          : "border-orange-200 bg-white text-secondary hover:border-primary"
+                      }`}
+                    >
+                      {method === "DINHEIRO" ? "Dinheiro" : 
+                       method === "PIX" ? "PIX" :
+                       method === "CARTAO" ? "Cartao" : "Fiado"}
+                    </button>
+                  ))}
+                </div>
+                {paymentMethod === "DINHEIRO" && (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-secondary mb-2">Valor Recebido</label>
+                      <Input
+                        data-testid="amount-paid-input"
+                        type="number"
+                        step="0.01"
+                        value={amountPaid}
+                        onChange={(e) => setAmountPaid(e.target.value)}
+                        placeholder="0.00"
+                        className="h-12 border-orange-200 text-lg"
+                      />
+                    </div>
+                    {amountPaid && parseFloat(amountPaid) >= calculateTotal() && (
+                      <div className="bg-green-50 rounded-xl p-4 text-center">
+                        <p className="text-sm text-secondary-light">Troco</p>
+                        <p className="text-2xl font-bold text-accent-green">
+                          R$ {(parseFloat(amountPaid) - calculateTotal()).toFixed(2)}
+                        </p>
+                      </div>
+                    )}
+                    {amountPaid && parseFloat(amountPaid) < calculateTotal() && (
+                      <div className="bg-red-50 rounded-xl p-4 text-center">
+                        <p className="text-sm text-accent-red">Valor insuficiente!</p>
+                        <p className="text-lg font-bold text-accent-red">
+                          Falta: R$ {(calculateTotal() - parseFloat(amountPaid)).toFixed(2)}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
