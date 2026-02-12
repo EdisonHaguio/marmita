@@ -642,9 +642,16 @@ export default function AttendantDashboard({ user, onLogout }) {
                   </h2>
                   <div className="space-y-2">
                     {cartItems.map((item, index) => {
-                      const proteinProduct = products.find(p => p.name === item.protein);
-                      const priceKey = `price_${item.size.toLowerCase()}`;
-                      const price = proteinProduct?.[priceKey] || 0;
+                      // Calcula preço somando todas as proteínas
+                      const proteinsArray = item.proteins || [item.protein];
+                      let totalPrice = 0;
+                      proteinsArray.forEach(proteinName => {
+                        const proteinProduct = products.find(p => p.name === proteinName);
+                        if (proteinProduct) {
+                          const priceKey = `price_${item.size.toLowerCase()}`;
+                          totalPrice += proteinProduct[priceKey] || 0;
+                        }
+                      });
                       return (
                         <div
                           key={item.id}
@@ -660,9 +667,9 @@ export default function AttendantDashboard({ user, onLogout }) {
                                 </span>
                               )}
                               <span className="font-semibold text-secondary">Tamanho {item.size}</span>
-                              <span className="text-sm text-secondary-light">R$ {price.toFixed(2)}</span>
+                              <span className="text-sm text-secondary-light">R$ {totalPrice.toFixed(2)}</span>
                             </div>
-                            <p className="text-sm text-secondary">{item.protein}</p>
+                            <p className="text-sm text-secondary font-medium">{proteinsArray.join(" + ")}</p>
                             <p className="text-xs text-secondary-light">{item.accompaniments.join(", ")}</p>
                           </div>
                           <Button
