@@ -375,14 +375,28 @@ async def create_order(order_input: OrderCreate):
 async def update_order_status(order_id: str, update: OrderStatusUpdate):
     result = await db.orders.update_one({"id": order_id}, {"$set": {"status": update.status}})
     if result.modified_count == 0:
-        raise HTTPException(status_code=404, detail="Pedido não encontrado")
+        raise HTTPException(status_code=404, detail="Pedido nao encontrado")
     return {"message": "Status atualizado"}
+
+@api_router.get("/orders/{order_id}/receipt")
+async def get_order_receipt(order_id: str):
+    """Get receipt preview without printing"""
+    order_dict = await db.orders.find_one({"id": order_id}, {"_id": 0})
+    if not order_dict:
+        raise HTTPException(status_code=404, detail="Pedido nao encontrado")
+    
+    settings_dict = await db.settings.find_one({"id": "settings"}, {"_id": 0})
+    settings = Settings(**settings_dict) if settings_dict else Settings()
+    
+    receipt_text = generate_receipt_text(order_dict, settings)
+    return {"receipt": receipt_text, "order_number": order_dict['order_number']}
 
 @api_router.post("/orders/{order_id}/print")
 async def print_order(order_id: str):
+    """Print order (can be used for reprint)"""
     order_dict = await db.orders.find_one({"id": order_id}, {"_id": 0})
     if not order_dict:
-        raise HTTPException(status_code=404, detail="Pedido não encontrado")
+        raise HTTPException(status_code=404, detail="Pedido nao encontrado")
     
     settings_dict = await db.settings.find_one({"id": "settings"}, {"_id": 0})
     settings = Settings(**settings_dict) if settings_dict else Settings()
