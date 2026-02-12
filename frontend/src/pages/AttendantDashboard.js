@@ -42,6 +42,10 @@ export default function AttendantDashboard({ user, onLogout }) {
   // Shared items
   const [selectedSalads, setSelectedSalads] = useState([]);
   const [selectedBeverages, setSelectedBeverages] = useState([]);
+  const [selectedCoffees, setSelectedCoffees] = useState([]);
+  const [selectedSnacks, setSelectedSnacks] = useState([]);
+  const [selectedDesserts, setSelectedDesserts] = useState([]);
+  const [selectedOthers, setSelectedOthers] = useState([]);
   const [observations, setObservations] = useState("");
   const [loading, setLoading] = useState(false);
 
