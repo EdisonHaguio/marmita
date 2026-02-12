@@ -571,18 +571,28 @@ export default function AttendantDashboard({ user, onLogout }) {
 
               {/* Proteins */}
               <div className="bg-white rounded-2xl p-6 shadow-warm">
-                <h2 className="text-xl font-outfit font-semibold text-secondary mb-4">Mistura (Proteína) *</h2>
+                <h2 className="text-xl font-outfit font-semibold text-secondary mb-2">
+                  Mistura (Proteína) * 
+                  <span className="text-sm font-normal text-secondary-light ml-2">
+                    {size === "P" ? "(escolha 1)" : "(escolha até 2)"}
+                  </span>
+                </h2>
+                <p className="text-sm text-secondary-light mb-4">
+                  Selecionado: {selectedProteins.length}/{getMaxProteins(size)}
+                  {selectedProteins.length > 0 && ` - ${selectedProteins.join(" + ")}`}
+                </p>
                 <div className="grid sm:grid-cols-2 gap-3">
                   {proteins.map((protein) => {
                     const priceKey = `price_${size.toLowerCase()}`;
                     const price = protein[priceKey] || 0;
+                    const isSelected = selectedProteins.includes(protein.name);
                     return (
                       <button
                         key={protein.id}
                         data-testid={`protein-${protein.name.toLowerCase().replace(/\s/g, '-')}`}
-                        onClick={() => setSelectedProtein(protein.name)}
+                        onClick={() => toggleProtein(protein.name)}
                         className={`h-20 rounded-xl border-2 transition-all flex flex-col items-center justify-center font-medium ${
-                          selectedProtein === protein.name
+                          isSelected
                             ? "border-primary bg-primary text-white shadow-lg"
                             : "border-orange-200 bg-white text-secondary hover:border-primary"
                         }`}
@@ -616,7 +626,7 @@ export default function AttendantDashboard({ user, onLogout }) {
                 <Button
                   data-testid="add-marmita-to-cart"
                   onClick={addMarmitaToCart}
-                  disabled={!selectedProtein || selectedAccompaniments.length === 0 || (isCompanyOrder && !employeeName)}
+                  disabled={selectedProteins.length === 0 || selectedAccompaniments.length === 0 || (isCompanyOrder && !employeeName)}
                   className="w-full mt-4 h-12 bg-accent-green hover:bg-green-700 text-white rounded-xl"
                 >
                   <Plus className="w-5 h-5 mr-2" />
