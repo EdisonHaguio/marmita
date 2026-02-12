@@ -226,8 +226,8 @@ export default function AttendantDashboard({ user, onLogout }) {
   };
 
   const addMarmitaToCart = () => {
-    if (!selectedProtein || selectedAccompaniments.length === 0) {
-      toast.error("Selecione proteína e acompanhamentos");
+    if (selectedProteins.length === 0 || selectedAccompaniments.length === 0) {
+      toast.error("Selecione proteína(s) e acompanhamentos");
       return;
     }
 
@@ -239,7 +239,7 @@ export default function AttendantDashboard({ user, onLogout }) {
     const newItem = {
       id: Date.now() + Math.random().toString(36).substr(2, 9),
       size,
-      protein: selectedProtein,
+      proteins: selectedProteins,  // Array de proteínas
       accompaniments: selectedAccompaniments,
       employee_name: isCompanyOrder ? employeeName : null,
     };
@@ -249,10 +249,11 @@ export default function AttendantDashboard({ user, onLogout }) {
     // Reset marmita form
     setSize("M");
     setSelectedAccompaniments([]);
-    setSelectedProtein("");
+    setSelectedProteins([]);
     setEmployeeName("");
     
-    toast.success(isCompanyOrder ? `Marmita para ${employeeName} adicionada!` : "Marmita adicionada!");
+    const proteinText = selectedProteins.join(" + ");
+    toast.success(isCompanyOrder ? `Marmita ${size} (${proteinText}) para ${employeeName} adicionada!` : `Marmita ${size} (${proteinText}) adicionada!`);
   };
 
   const removeMarmitaFromCart = (itemId) => {
