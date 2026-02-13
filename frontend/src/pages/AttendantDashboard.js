@@ -473,16 +473,16 @@ export default function AttendantDashboard({ user, onLogout }) {
                     />
                     {showCustomerSuggestions && filteredCustomers.length > 0 && (
                       <div className="absolute z-10 w-full mt-1 bg-white border border-orange-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
-                        {filteredCustomers.map((customer) => (
+                        {filteredCustomers.map((customer, idx) => (
                           <button
-                            key={customer.id}
+                            key={customer.id || `customer-${idx}`}
                             type="button"
                             onClick={() => selectCustomer(customer)}
                             className="w-full text-left px-4 py-2 hover:bg-orange-50 transition-colors border-b border-orange-100 last:border-b-0"
                           >
                             <p className="font-medium text-secondary">{customer.name}</p>
-                            {customer.phone && <p className="text-xs text-secondary-light">📞 {customer.phone}</p>}
-                            {customer.address && <p className="text-xs text-secondary-light">📍 {customer.address}</p>}
+                            {customer.phone && <p className="text-xs text-secondary-light">{customer.phone}</p>}
+                            {customer.address && <p className="text-xs text-secondary-light">{customer.address}</p>}
                           </button>
                         ))}
                       </div>
