@@ -3,16 +3,16 @@ FROM node:18-alpine
 WORKDIR /app/frontend
 
 # Copiar package files
-COPY package.json yarn.lock ./
+COPY package.json ./
 
-# Instalar dependências
-RUN yarn install --frozen-lockfile
+# Instalar dependencias
+RUN npm install --legacy-peer-deps
 
-# Copiar código
+# Copiar codigo
 COPY . .
 
 # Expor porta
 EXPOSE 3000
 
-# Comando de inicialização
-CMD ["yarn", "start"]
+# Comando de inicializacao
+CMD ["npm", "start"]
