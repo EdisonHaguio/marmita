@@ -1041,8 +1041,8 @@ export default function AttendantDashboard({ user, onLogout }) {
               {myOrders.length === 0 ? (
                 <p className="text-center text-secondary-light py-8">Nenhum pedido ainda</p>
               ) : (
-                myOrders.map((order) => (
-                  <div key={order.id} data-testid={`order-item-${order.order_number}`} className="border-2 border-orange-100 rounded-xl p-4 hover:border-primary transition-all">
+                myOrders.map((order, idx) => (
+                  <div key={order.id || `order-${idx}`} data-testid={`order-item-${order.order_number}`} className="border-2 border-orange-100 rounded-xl p-4 hover:border-primary transition-all">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
