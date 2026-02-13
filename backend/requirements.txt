@@ -1,25 +1,12 @@
-# Sistema Dona Guedes - Dependências Backend
-# Japão Informática
-
-# Framework Web
+# Sistema Dona Guedes - Backend
 fastapi==0.115.0
 uvicorn==0.30.6
-
-# Banco de Dados
 pymongo==4.8.0
-
-# Validação e Modelos
+motor==3.3.2
 pydantic==2.9.1
-
-# Autenticação JWT
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-
-# Formulários
 python-multipart==0.0.9
-
-# Requisições HTTP (para licenças)
 requests==2.32.3
-
-# CORS
-starlette==0.38.5
+python-dotenv==1.0.0
+python-escpos==3.1
