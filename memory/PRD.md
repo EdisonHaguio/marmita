@@ -5,7 +5,7 @@
 ## Versões Disponíveis
 
 ### 1. Versão Online (Preview)
-- URL: https://marmitex-3.preview.emergentagent.com
+- URL: https://kitchenpal-6.preview.emergentagent.com
 - Usa MongoDB
 - Requer internet
 
