@@ -1,46 +1,102 @@
-# Dona Guedes - Criar Instalador Offline
+# 🍱 DONA GUEDES - Sistema de Marmitaria (Versão Offline)
 
-## Requisitos para CRIAR o instalador:
-- Windows 10
-- Python 3.11+ (https://python.org)
-- Node.js 18+ (https://nodejs.org)
+## 📋 Requisitos
 
-## Como criar o instalador:
+- **Windows 10 ou superior**
+- **Python 3.9+** (baixe em https://www.python.org/downloads/)
+  - ⚠️ Durante a instalação, **MARQUE** a opção "Add Python to PATH"
 
-### Passo 1: Preparar
-```cmd
-cd desktop
-pip install pyinstaller fastapi uvicorn pydantic
+---
+
+## 🚀 Como Usar
+
+### Opção 1: Executar Diretamente (Mais Simples)
+
+1. Dê **duplo clique** no arquivo `INICIAR_SISTEMA.bat`
+2. Aguarde a mensagem "SISTEMA INICIANDO..."
+3. Abra o navegador e acesse: **http://localhost:8000**
+4. Faça login com:
+   - **Código:** `admin`
+   - **Senha:** `admin123`
+
+### Opção 2: Criar Executável (.exe)
+
+Se você quer um arquivo único que pode copiar para qualquer PC:
+
+1. Dê **duplo clique** no arquivo `CRIAR_INSTALADOR.bat`
+2. Aguarde o processo (pode levar alguns minutos)
+3. O arquivo `DonaGuedes.exe` será criado na pasta `dist/`
+4. Copie esse arquivo para onde quiser e execute com duplo clique
+
+---
+
+## 📦 Estrutura dos Arquivos
+
+```
+desktop/
+├── INICIAR_SISTEMA.bat     <- Execute este para iniciar
+├── CRIAR_INSTALADOR.bat    <- Execute para criar o .exe
+├── server_offline.py       <- Servidor backend
+├── dona_guedes.db          <- Banco de dados SQLite
+├── static/                 <- Frontend compilado
+│   ├── index.html
+│   └── static/
+└── README.md               <- Este arquivo
 ```
 
-### Passo 2: Compilar Frontend
-```cmd
-cd ..\frontend
-npm install --legacy-peer-deps
-npm run build
-```
+---
 
-### Passo 3: Copiar Frontend
-```cmd
-cd ..\desktop
-xcopy /E /I /Y ..\frontend\build static
-```
+## 🔐 Login Padrão
 
-### Passo 4: Criar EXE
-```cmd
-pyinstaller --onefile --name=DonaGuedes --add-data "static;static" server_offline.py
-```
+- **Administrador:**
+  - Código: `admin`
+  - Senha: `admin123`
 
-### Passo 5: Pronto!
-O arquivo `dist\DonaGuedes.exe` é o instalador.
+- **Atendentes:**
+  - Crie novos atendentes no painel do administrador
 
-## Para usar:
-1. Copie `DonaGuedes.exe` para qualquer PC
-2. Execute com duplo clique
-3. Acesse http://localhost:8000
-4. Login: admin / admin123
+---
 
-## Funciona 100% offline!
-- Não precisa internet
-- Não precisa instalar nada
-- Banco de dados local (SQLite)
+## ⚙️ Funcionalidades
+
+- ✅ Cadastro de produtos (proteínas, acompanhamentos, bebidas, etc.)
+- ✅ Cadastro de clientes (pessoa física e empresa)
+- ✅ Pedidos com múltiplas marmitas
+- ✅ Regra de 2 proteínas para marmitas M e G
+- ✅ Pedidos de empresa com cupons por funcionário
+- ✅ Cálculo de troco automático
+- ✅ Visualização e reimpressão de cupons
+- ✅ Tela da cozinha em tempo real
+- ✅ Relatório de vendas diárias
+- ✅ Impressão na impressora padrão do Windows
+
+---
+
+## 🛠️ Solução de Problemas
+
+### "Python não encontrado"
+- Baixe Python em: https://www.python.org/downloads/
+- **IMPORTANTE:** Marque "Add Python to PATH" durante instalação
+- Reinicie o computador após instalar
+
+### "Porta 8000 já está em uso"
+- Feche outras instâncias do programa
+- Ou reinicie o computador
+
+### Impressora não funciona
+- O sistema usa a impressora padrão do Windows
+- Configure sua impressora como padrão nas configurações do Windows
+
+---
+
+## 📞 Suporte
+
+- **Japão Informática**
+- **(19) 99813-2220**
+
+---
+
+## 📝 Backup dos Dados
+
+Todos os dados são salvos no arquivo `dona_guedes.db`. 
+Para fazer backup, simplesmente copie este arquivo para outro local.
