@@ -1,0 +1,1220 @@
+import { useState, useEffect } from "react";
+import { axiosInstance } from "../App";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Textarea } from "../components/ui/textarea";
+import { toast } from "sonner";
+import { LogOut, Users, UtensilsCrossed, Settings, Plus, Trash2, Eye, EyeOff, BarChart3 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "../components/ui/dialog";
+
+export default function AdminDashboard({ user, onLogout }) {
+  const [view, setView] = useState("products");
+  const [products, setProducts] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [settings, setSettings] = useState({});
+  const [orders, setOrders] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    loadData();
+  }, [view, selectedDate]);
+
+  const loadData = async () => {
+    try {
+      if (view === "products") {
+        const res = await axiosInstance.get("/products");
+        setProducts(res.data);
+      } else if (view === "users") {
+        const res = await axiosInstance.get("/users");
+        setUsers(res.data);
+      } else if (view === "customers") {
+        const res = await axiosInstance.get("/customers");
+        setCustomers(res.data);
+      } else if (view === "settings") {
+        const res = await axiosInstance.get("/settings");
+        setSettings(res.data);
+      } else if (view === "reports") {
+        const res = await axiosInstance.get("/orders");
+        setOrders(res.data);
+      }
+    } catch (error) {
+      toast.error("Erro ao carregar dados");
+    }
+  };
+
+  const toggleProductActive = async (productId, currentActive) => {
+    try {
+      await axiosInstance.patch(`/products/${productId}`, { active: !currentActive });
+      toast.success(currentActive ? "Produto desativado" : "Produto ativado");
+      loadData();
+    } catch (error) {
+      toast.error("Erro ao atualizar produto");
+    }
+  };
+
+  const deleteUser = async (userId) => {
+    if (!window.confirm("Tem certeza que deseja remover este funcionário?")) return;
+    
+    try {
+      await axiosInstance.delete(`/users/${userId}`);
+      toast.success("Funcionário removido");
+      loadData();
+    } catch (error) {
+      toast.error("Erro ao remover funcionário");
+    }
+  };
+
+  const updateSettings = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await axiosInstance.patch("/settings", settings);
+      toast.success("Configurações atualizadas!");
+    } catch (error) {
+      toast.error("Erro ao atualizar");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#FFF8F0] to-[#FFE0B2]">
+      {/* Header */}
+      <header className="bg-white shadow-md border-b-4 border-primary relative">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-outfit font-bold text-secondary">Admin - Dona Guedes</h1>
+            <p className="text-sm text-secondary-light">Olá, {user.name}</p>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-right hidden sm:block">
+              <p className="text-xs text-secondary-light">Suporte: Japão Informática</p>
+              <p className="text-xs text-secondary-light">(19) 99813-2220</p>
+            </div>
+            <Button
+              data-testid="admin-logout-button"
+              onClick={onLogout}
+              variant="outline"
+              className="border-secondary text-secondary hover:bg-secondary hover:text-white"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Sair
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      {/* Tabs */}
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="flex gap-2 mb-6 overflow-x-auto">
+          <Button
+            data-testid="products-tab"
+            onClick={() => setView("products")}
+            className={`flex-1 h-12 rounded-xl transition-all whitespace-nowrap ${
+              view === "products"
+                ? "bg-primary text-white shadow-lg"
+                : "bg-white text-secondary hover:bg-orange-50"
+            }`}
+          >
+            <UtensilsCrossed className="w-5 h-5 mr-2" />
+            Produtos
+          </Button>
+          <Button
+            data-testid="customers-tab"
+            onClick={() => setView("customers")}
+            className={`flex-1 h-12 rounded-xl transition-all whitespace-nowrap ${
+              view === "customers"
+                ? "bg-primary text-white shadow-lg"
+                : "bg-white text-secondary hover:bg-orange-50"
+            }`}
+          >
+            <Users className="w-5 h-5 mr-2" />
+            Clientes
+          </Button>
+          <Button
+            data-testid="users-tab"
+            onClick={() => setView("users")}
+            className={`flex-1 h-12 rounded-xl transition-all whitespace-nowrap ${
+              view === "users"
+                ? "bg-primary text-white shadow-lg"
+                : "bg-white text-secondary hover:bg-orange-50"
+            }`}
+          >
+            <Users className="w-5 h-5 mr-2" />
+            Funcionarios
+          </Button>
+          <Button
+            data-testid="reports-tab"
+            onClick={() => setView("reports")}
+            className={`flex-1 h-12 rounded-xl transition-all whitespace-nowrap ${
+              view === "reports"
+                ? "bg-primary text-white shadow-lg"
+                : "bg-white text-secondary hover:bg-orange-50"
+            }`}
+          >
+            <BarChart3 className="w-5 h-5 mr-2" />
+            Relatorios
+          </Button>
+          <Button
+            data-testid="settings-tab"
+            onClick={() => setView("settings")}
+            className={`flex-1 h-12 rounded-xl transition-all whitespace-nowrap ${
+              view === "settings"
+                ? "bg-primary text-white shadow-lg"
+                : "bg-white text-secondary hover:bg-orange-50"
+            }`}
+          >
+            <Settings className="w-5 h-5 mr-2" />
+            Config
+          </Button>
+        </div>
+
+        {view === "products" && <ProductsTab products={products} onRefresh={loadData} />}
+        {view === "customers" && <CustomersTab customers={customers} onRefresh={loadData} />}
+        {view === "users" && <UsersTab users={users} onDelete={deleteUser} onRefresh={loadData} />}
+        {view === "reports" && <ReportsTab orders={orders} products={products} selectedDate={selectedDate} setSelectedDate={setSelectedDate} />}
+        {view === "settings" && <SettingsTab settings={settings} setSettings={setSettings} onSubmit={updateSettings} loading={loading} />}
+      </div>
+    </div>
+  );
+}
+
+function ProductsTab({ products, onRefresh }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [formData, setFormData] = useState({ name: "", type: "protein", price_p: 0, price_m: 0, price_g: 0, price: 0 });
+
+  const toggleProductActive = async (productId, currentActive) => {
+    try {
+      await axiosInstance.patch(`/products/${productId}`, { active: !currentActive });
+      toast.success(currentActive ? "Produto desativado" : "Produto ativado");
+      onRefresh();
+    } catch (error) {
+      toast.error("Erro ao atualizar produto");
+    }
+  };
+
+  const deleteProductPermanent = async (productId, productName) => {
+    if (!window.confirm(`Tem certeza que deseja EXCLUIR PERMANENTEMENTE "${productName}"? Esta ação não pode ser desfeita!`)) return;
+    
+    try {
+      await axiosInstance.delete(`/products/${productId}/permanent`);
+      toast.success("Produto excluído permanentemente");
+      onRefresh();
+    } catch (error) {
+      toast.error("Erro ao excluir produto");
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axiosInstance.post("/products", formData);
+      toast.success("Produto criado!");
+      setIsOpen(false);
+      setFormData({ name: "", type: "protein", price_p: 0, price_m: 0, price_g: 0, price: 0 });
+      onRefresh();
+    } catch (error) {
+      toast.error("Erro ao criar produto");
+    }
+  };
+
+  const accompaniments = products.filter(p => p.type === "accompaniment");
+  const proteins = products.filter(p => p.type === "protein");
+  const salads = products.filter(p => p.type === "salad");
+  const beverages = products.filter(p => p.type === "beverage");
+  const coffees = products.filter(p => p.type === "coffee");
+  const snacks = products.filter(p => p.type === "snack");
+  const pizzas = products.filter(p => p.type === "pizza");
+  const desserts = products.filter(p => p.type === "dessert");
+  const others = products.filter(p => p.type === "other");
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-end">
+        <Button 
+          data-testid="add-product-button" 
+          onClick={() => setIsOpen(true)}
+          className="bg-primary hover:bg-primary-hover text-white"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Novo Produto
+        </Button>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Novo Produto</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Nome</label>
+                <Input
+                  data-testid="product-name-input"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Tipo</label>
+                <select
+                  data-testid="product-type-select"
+                  value={formData.type}
+                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                  className="w-full h-10 border border-gray-300 rounded-lg px-3"
+                >
+                  <option value="accompaniment">Acompanhamento</option>
+                  <option value="protein">Mistura (Proteína)</option>
+                  <option value="salad">Salada</option>
+                  <option value="beverage">Bebida</option>
+                  <option value="coffee">Café</option>
+                  <option value="snack">Lanche</option>
+                  <option value="pizza">Pizza</option>
+                  <option value="dessert">Sobremesa</option>
+                  <option value="other">Outro</option>
+                </select>
+              </div>
+              {formData.type === "protein" && (
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <label className="block text-xs font-medium mb-1">Preço P</label>
+                    <Input
+                      data-testid="product-price-p-input"
+                      type="number"
+                      step="0.01"
+                      value={formData.price_p}
+                      onChange={(e) => setFormData({ ...formData, price_p: parseFloat(e.target.value) })}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium mb-1">Preço M</label>
+                    <Input
+                      data-testid="product-price-m-input"
+                      type="number"
+                      step="0.01"
+                      value={formData.price_m}
+                      onChange={(e) => setFormData({ ...formData, price_m: parseFloat(e.target.value) })}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium mb-1">Preço G</label>
+                    <Input
+                      data-testid="product-price-g-input"
+                      type="number"
+                      step="0.01"
+                      value={formData.price_g}
+                      onChange={(e) => setFormData({ ...formData, price_g: parseFloat(e.target.value) })}
+                    />
+                  </div>
+                </div>
+              )}
+              {formData.type === "beverage" && (
+                <div>
+                  <label className="block text-sm font-medium mb-2">Preço (fixo)</label>
+                  <Input
+                    data-testid="product-price-input"
+                    type="number"
+                    step="0.01"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                    placeholder="5.00"
+                  />
+                </div>
+              )}
+              {formData.type === "salad" && (
+                <div>
+                  <label className="block text-sm font-medium mb-2">Preço (fixo)</label>
+                  <Input
+                    data-testid="product-price-salad-input"
+                    type="number"
+                    step="0.01"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                    placeholder="3.00"
+                  />
+                </div>
+              )}
+              {(formData.type === "coffee" || formData.type === "snack" || formData.type === "dessert" || formData.type === "other") && (
+                <div>
+                  <label className="block text-sm font-medium mb-2">Preço (fixo)</label>
+                  <Input
+                    data-testid="product-price-fixed-input"
+                    type="number"
+                    step="0.01"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                    placeholder="5.00"
+                  />
+                </div>
+              )}
+              {formData.type === "pizza" && (
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <label className="block text-xs font-medium mb-1">Preço P</label>
+                    <Input
+                      data-testid="product-pizza-price-p-input"
+                      type="number"
+                      step="0.01"
+                      value={formData.price_p}
+                      onChange={(e) => setFormData({ ...formData, price_p: parseFloat(e.target.value) })}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium mb-1">Preço M</label>
+                    <Input
+                      data-testid="product-pizza-price-m-input"
+                      type="number"
+                      step="0.01"
+                      value={formData.price_m}
+                      onChange={(e) => setFormData({ ...formData, price_m: parseFloat(e.target.value) })}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium mb-1">Preço G</label>
+                    <Input
+                      data-testid="product-pizza-price-g-input"
+                      type="number"
+                      step="0.01"
+                      value={formData.price_g}
+                      onChange={(e) => setFormData({ ...formData, price_g: parseFloat(e.target.value) })}
+                    />
+                  </div>
+                </div>
+              )}
+              <Button data-testid="submit-product-button" type="submit" className="w-full bg-primary hover:bg-primary-hover text-white">
+                Criar Produto
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">Misturas (Proteínas)</h3>
+        <div className="space-y-2">
+          {proteins.map((p) => (
+            <div key={p.id} data-testid={`product-item-${p.id}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
+              <div>
+                <p className="font-semibold text-secondary">{p.name}</p>
+                <p className="text-sm text-secondary-light">
+                  P: R$ {p.price_p.toFixed(2)} | M: R$ {p.price_m.toFixed(2)} | G: R$ {p.price_g.toFixed(2)}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  data-testid={`toggle-product-${p.id}`}
+                  onClick={() => toggleProductActive(p.id, p.active)}
+                  variant="outline"
+                  size="sm"
+                  className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                >
+                  {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                </Button>
+                <Button
+                  data-testid={`delete-product-${p.id}`}
+                  onClick={() => deleteProductPermanent(p.id, p.name)}
+                  variant="outline"
+                  size="sm"
+                  className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">Acompanhamentos</h3>
+        <div className="space-y-2">
+          {accompaniments.map((p) => (
+            <div key={p.id} data-testid={`accompaniment-item-${p.id}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
+              <p className="font-semibold text-secondary">{p.name}</p>
+              <div className="flex gap-2">
+                <Button
+                  data-testid={`toggle-accompaniment-${p.id}`}
+                  onClick={() => toggleProductActive(p.id, p.active)}
+                  variant="outline"
+                  size="sm"
+                  className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                >
+                  {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                </Button>
+                <Button
+                  data-testid={`delete-accompaniment-${p.id}`}
+                  onClick={() => deleteProductPermanent(p.id, p.name)}
+                  variant="outline"
+                  size="sm"
+                  className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">Bebidas</h3>
+        <div className="space-y-2">
+          {beverages.length === 0 ? (
+            <p className="text-center text-secondary-light py-4">Nenhuma bebida cadastrada</p>
+          ) : (
+            beverages.map((p) => (
+              <div key={p.id} data-testid={`beverage-item-${p.id}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
+                <div>
+                  <p className="font-semibold text-secondary">{p.name}</p>
+                  <p className="text-sm text-secondary-light">R$ {(p.price || 0).toFixed(2)}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    data-testid={`toggle-beverage-${p.id}`}
+                    onClick={() => toggleProductActive(p.id, p.active)}
+                    variant="outline"
+                    size="sm"
+                    className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                  >
+                    {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    data-testid={`delete-beverage-${p.id}`}
+                    onClick={() => deleteProductPermanent(p.id, p.name)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">Saladas</h3>
+        <div className="space-y-2">
+          {salads.length === 0 ? (
+            <p className="text-center text-secondary-light py-4">Nenhuma salada cadastrada</p>
+          ) : (
+            salads.map((p) => (
+              <div key={p.id} data-testid={`salad-item-${p.id}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
+                <div>
+                  <p className="font-semibold text-secondary">{p.name}</p>
+                  <p className="text-sm text-secondary-light">R$ {(p.price || 0).toFixed(2)}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    data-testid={`toggle-salad-${p.id}`}
+                    onClick={() => toggleProductActive(p.id, p.active)}
+                    variant="outline"
+                    size="sm"
+                    className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                  >
+                    {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    data-testid={`delete-salad-${p.id}`}
+                    onClick={() => deleteProductPermanent(p.id, p.name)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Cafés */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">☕ Cafés</h3>
+        <div className="space-y-2">
+          {coffees.length === 0 ? (
+            <p className="text-center text-secondary-light py-4">Nenhum café cadastrado</p>
+          ) : (
+            coffees.map((p) => (
+              <div key={p.id} data-testid={`coffee-item-${p.id}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
+                <div>
+                  <p className="font-semibold text-secondary">{p.name}</p>
+                  <p className="text-sm text-secondary-light">R$ {(p.price || 0).toFixed(2)}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    data-testid={`toggle-coffee-${p.id}`}
+                    onClick={() => toggleProductActive(p.id, p.active)}
+                    variant="outline"
+                    size="sm"
+                    className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                  >
+                    {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    data-testid={`delete-coffee-${p.id}`}
+                    onClick={() => deleteProductPermanent(p.id, p.name)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Lanches */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">🥪 Lanches</h3>
+        <div className="space-y-2">
+          {snacks.length === 0 ? (
+            <p className="text-center text-secondary-light py-4">Nenhum lanche cadastrado</p>
+          ) : (
+            snacks.map((p) => (
+              <div key={p.id} data-testid={`snack-item-${p.id}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
+                <div>
+                  <p className="font-semibold text-secondary">{p.name}</p>
+                  <p className="text-sm text-secondary-light">R$ {(p.price || 0).toFixed(2)}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    data-testid={`toggle-snack-${p.id}`}
+                    onClick={() => toggleProductActive(p.id, p.active)}
+                    variant="outline"
+                    size="sm"
+                    className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                  >
+                    {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    data-testid={`delete-snack-${p.id}`}
+                    onClick={() => deleteProductPermanent(p.id, p.name)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Pizzas */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">🍕 Pizzas</h3>
+        <div className="space-y-2">
+          {pizzas.length === 0 ? (
+            <p className="text-center text-secondary-light py-4">Nenhuma pizza cadastrada</p>
+          ) : (
+            pizzas.map((p) => (
+              <div key={p.id} data-testid={`pizza-item-${p.id}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
+                <div>
+                  <p className="font-semibold text-secondary">{p.name}</p>
+                  <p className="text-sm text-secondary-light">
+                    P: R$ {(p.price_p || 0).toFixed(2)} | M: R$ {(p.price_m || 0).toFixed(2)} | G: R$ {(p.price_g || 0).toFixed(2)}
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    data-testid={`toggle-pizza-${p.id}`}
+                    onClick={() => toggleProductActive(p.id, p.active)}
+                    variant="outline"
+                    size="sm"
+                    className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                  >
+                    {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    data-testid={`delete-pizza-${p.id}`}
+                    onClick={() => deleteProductPermanent(p.id, p.name)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Sobremesas */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">🍰 Sobremesas</h3>
+        <div className="space-y-2">
+          {desserts.length === 0 ? (
+            <p className="text-center text-secondary-light py-4">Nenhuma sobremesa cadastrada</p>
+          ) : (
+            desserts.map((p) => (
+              <div key={p.id} data-testid={`dessert-item-${p.id}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
+                <div>
+                  <p className="font-semibold text-secondary">{p.name}</p>
+                  <p className="text-sm text-secondary-light">R$ {(p.price || 0).toFixed(2)}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    data-testid={`toggle-dessert-${p.id}`}
+                    onClick={() => toggleProductActive(p.id, p.active)}
+                    variant="outline"
+                    size="sm"
+                    className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                  >
+                    {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    data-testid={`delete-dessert-${p.id}`}
+                    onClick={() => deleteProductPermanent(p.id, p.name)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* Outros */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">📦 Outros Produtos</h3>
+        <div className="space-y-2">
+          {others.length === 0 ? (
+            <p className="text-center text-secondary-light py-4">Nenhum outro produto cadastrado</p>
+          ) : (
+            others.map((p) => (
+              <div key={p.id} data-testid={`other-item-${p.id}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
+                <div>
+                  <p className="font-semibold text-secondary">{p.name}</p>
+                  <p className="text-sm text-secondary-light">R$ {(p.price || 0).toFixed(2)}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    data-testid={`toggle-other-${p.id}`}
+                    onClick={() => toggleProductActive(p.id, p.active)}
+                    variant="outline"
+                    size="sm"
+                    className={p.active ? "border-accent-green text-accent-green" : "border-gray-400 text-gray-400"}
+                  >
+                    {p.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    data-testid={`delete-other-${p.id}`}
+                    onClick={() => deleteProductPermanent(p.id, p.name)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CustomersTab({ customers, onRefresh }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [editingCustomer, setEditingCustomer] = useState(null);
+  const [formData, setFormData] = useState({ name: "", phone: "", address: "" });
+
+  const openNewDialog = () => {
+    setEditingCustomer(null);
+    setFormData({ name: "", phone: "", address: "" });
+    setIsOpen(true);
+  };
+
+  const openEditDialog = (customer) => {
+    setEditingCustomer(customer);
+    setFormData({ name: customer.name, phone: customer.phone || "", address: customer.address || "" });
+    setIsOpen(true);
+  };
+
+  const closeDialog = () => {
+    setIsOpen(false);
+    setEditingCustomer(null);
+    setFormData({ name: "", phone: "", address: "" });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (editingCustomer) {
+        await axiosInstance.patch(`/customers/${editingCustomer.id}`, formData);
+        toast.success("Cliente atualizado!");
+      } else {
+        await axiosInstance.post("/customers", formData);
+        toast.success("Cliente criado!");
+      }
+      closeDialog();
+      onRefresh();
+    } catch (error) {
+      toast.error("Erro ao salvar cliente");
+    }
+  };
+
+  const deleteCustomer = async (customerId, customerName) => {
+    if (!window.confirm(`Tem certeza que deseja excluir o cliente "${customerName}"?`)) return;
+    
+    try {
+      await axiosInstance.delete(`/customers/${customerId}`);
+      toast.success("Cliente excluído");
+      onRefresh();
+    } catch (error) {
+      toast.error("Erro ao excluir cliente");
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-end">
+        <Button 
+          data-testid="add-customer-button" 
+          onClick={openNewDialog}
+          className="bg-primary hover:bg-primary-hover text-white"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Novo Cliente
+        </Button>
+        <Dialog open={isOpen} onOpenChange={(open) => !open && closeDialog()}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{editingCustomer ? "Editar Cliente" : "Novo Cliente"}</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Nome *</label>
+                <Input
+                  data-testid="customer-name-input"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="João Silva"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Telefone</label>
+                <Input
+                  data-testid="customer-phone-input"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  placeholder="(11) 99999-9999"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Endereço</label>
+                <Textarea
+                  data-testid="customer-address-input"
+                  value={formData.address}
+                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  placeholder="Rua, número, bairro"
+                  className="min-h-20"
+                />
+              </div>
+              <Button data-testid="submit-customer-button" type="submit" className="w-full bg-primary hover:bg-primary-hover text-white">
+                {editingCustomer ? "Atualizar Cliente" : "Criar Cliente"}
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">Clientes Cadastrados</h3>
+        {customers.length === 0 ? (
+          <p className="text-center text-secondary-light py-8">Nenhum cliente cadastrado</p>
+        ) : (
+          <div className="space-y-2">
+            {customers.map((c) => (
+              <div key={c.id} data-testid={`customer-item-${c.id}`} className="flex items-start justify-between p-4 border border-orange-100 rounded-xl hover:border-primary transition-all">
+                <div className="flex-1">
+                  <p className="font-semibold text-secondary">{c.name}</p>
+                  {c.phone && <p className="text-sm text-secondary-light">📞 {c.phone}</p>}
+                  {c.address && <p className="text-sm text-secondary-light">📍 {c.address}</p>}
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    data-testid={`edit-customer-${c.id}`}
+                    onClick={() => openEditDialog(c)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-blue text-accent-blue hover:bg-accent-blue hover:text-white"
+                  >
+                    <Settings className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    data-testid={`delete-customer-${c.id}`}
+                    onClick={() => deleteCustomer(c.id, c.name)}
+                    variant="outline"
+                    size="sm"
+                    className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function UsersTab({ users, onDelete, onRefresh }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [formData, setFormData] = useState({ code: "", name: "" });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axiosInstance.post("/users", { ...formData, role: "attendant" });
+      toast.success("Funcionário criado!");
+      setIsOpen(false);
+      setFormData({ code: "", name: "" });
+      onRefresh();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || "Erro ao criar funcionário");
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-end">
+        <Button 
+          data-testid="add-user-button" 
+          onClick={() => setIsOpen(true)}
+          className="bg-primary hover:bg-primary-hover text-white"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Novo Funcionário
+        </Button>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Novo Funcionário</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Código</label>
+                <Input
+                  data-testid="user-code-input"
+                  value={formData.code}
+                  onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                  placeholder="001"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Nome</label>
+                <Input
+                  data-testid="user-name-input"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="João Silva"
+                  required
+                />
+              </div>
+              <Button data-testid="submit-user-button" type="submit" className="w-full bg-primary hover:bg-primary-hover text-white">
+                Criar Funcionário
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">Funcionários Ativos</h3>
+        <div className="space-y-2">
+          {users.filter(u => u.role === "attendant").map((u) => (
+            <div key={u.id} data-testid={`user-item-${u.code}`} className="flex items-center justify-between p-4 border border-orange-100 rounded-xl">
+              <div>
+                <p className="font-semibold text-secondary">{u.name}</p>
+                <p className="text-sm text-secondary-light">Código: {u.code}</p>
+              </div>
+              <Button
+                data-testid={`delete-user-${u.code}`}
+                onClick={() => onDelete(u.id)}
+                variant="outline"
+                size="sm"
+                className="border-accent-red text-accent-red hover:bg-accent-red hover:text-white"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SettingsTab({ settings, setSettings, onSubmit, loading }) {
+  return (
+    <div className="bg-white rounded-2xl p-6 shadow-warm">
+      <h3 className="text-xl font-outfit font-semibold text-secondary mb-6">Configurações da Loja</h3>
+      <form onSubmit={onSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-secondary mb-2">Nome da Loja</label>
+          <Input
+            data-testid="settings-store-name-input"
+            value={settings.store_name || ""}
+            onChange={(e) => setSettings({ ...settings, store_name: e.target.value })}
+            placeholder="Dona Guedes"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-secondary mb-2">Endereço da Loja</label>
+          <Input
+            data-testid="settings-store-address-input"
+            value={settings.store_address || ""}
+            onChange={(e) => setSettings({ ...settings, store_address: e.target.value })}
+            placeholder="Rua, número, bairro"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-secondary mb-2">URL da Logo (opcional)</label>
+          <Input
+            data-testid="settings-store-logo-input"
+            value={settings.store_logo_url || ""}
+            onChange={(e) => setSettings({ ...settings, store_logo_url: e.target.value })}
+            placeholder="https://exemplo.com/logo.png"
+          />
+          {settings.store_logo_url && (
+            <div className="mt-2">
+              <img src={settings.store_logo_url} alt="Logo" className="h-16 object-contain" />
+            </div>
+          )}
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-secondary mb-2">Tipo de Impressora</label>
+          <select
+            data-testid="settings-printer-type-select"
+            value={settings.printer_type || "windows"}
+            onChange={(e) => setSettings({ ...settings, printer_type: e.target.value })}
+            className="w-full h-10 border border-gray-300 rounded-lg px-3"
+          >
+            <option value="windows">Impressora Padrão do Windows (USB/Rede)</option>
+            <option value="thermal">Impressora Térmica ESC/POS (Tanca T650)</option>
+          </select>
+          <p className="text-xs text-secondary-light mt-1">
+            Windows: usa qualquer impressora instalada no Windows | Térmica: requer IP da impressora
+          </p>
+        </div>
+        {settings.printer_type === "thermal" && (
+          <>
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-2">IP da Impressora Térmica</label>
+              <Input
+                data-testid="settings-printer-ip-input"
+                value={settings.printer_ip || ""}
+                onChange={(e) => setSettings({ ...settings, printer_ip: e.target.value })}
+                placeholder="192.168.1.100"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-secondary mb-2">Porta da Impressora</label>
+              <Input
+                data-testid="settings-printer-port-input"
+                type="number"
+                value={settings.printer_port || 9100}
+                onChange={(e) => setSettings({ ...settings, printer_port: parseInt(e.target.value) })}
+                placeholder="9100"
+              />
+            </div>
+          </>
+        )}
+        <Button
+          data-testid="save-settings-button"
+          type="submit"
+          disabled={loading}
+          className="w-full h-12 bg-primary hover:bg-primary-hover text-white rounded-xl shadow-lg"
+        >
+          {loading ? "Salvando..." : "Salvar Configurações"}
+        </Button>
+      </form>
+    </div>
+  );
+}
+
+
+function ReportsTab({ orders, products, selectedDate, setSelectedDate }) {
+  // Filtrar pedidos do dia selecionado
+  const filteredOrders = orders.filter(order => {
+    const orderDate = new Date(order.created_at).toISOString().split('T')[0];
+    return orderDate === selectedDate;
+  });
+
+  // Calcular totais
+  const totalOrders = filteredOrders.length;
+  const totalRevenue = filteredOrders.reduce((sum, order) => sum + (order.total_price || 0), 0);
+  const completedOrders = filteredOrders.filter(o => o.status === "completed").length;
+  const pendingOrders = filteredOrders.filter(o => o.status === "pending").length;
+  const preparingOrders = filteredOrders.filter(o => o.status === "preparing").length;
+
+  // Contar marmitas por tamanho
+  const marmitasBySize = { P: 0, M: 0, G: 0 };
+  filteredOrders.forEach(order => {
+    (order.items || []).forEach(item => {
+      if (item.size && marmitasBySize[item.size] !== undefined) {
+        marmitasBySize[item.size]++;
+      }
+    });
+  });
+
+  // Vendas por atendente
+  const salesByAttendant = {};
+  filteredOrders.forEach(order => {
+    const name = order.attendant_name || "Desconhecido";
+    if (!salesByAttendant[name]) {
+      salesByAttendant[name] = { count: 0, total: 0 };
+    }
+    salesByAttendant[name].count++;
+    salesByAttendant[name].total += order.total_price || 0;
+  });
+
+  return (
+    <div className="space-y-6">
+      {/* Seletor de Data */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-xl font-outfit font-semibold text-secondary mb-4">Relatorio de Vendas</h3>
+        <div className="flex items-center gap-4">
+          <label className="text-sm font-medium text-secondary">Data:</label>
+          <Input
+            data-testid="report-date-input"
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="w-48"
+          />
+          <span className="text-sm text-secondary-light">
+            {new Date(selectedDate + 'T12:00:00').toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+          </span>
+        </div>
+      </div>
+
+      {/* Resumo do Dia */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-2xl p-6 shadow-warm text-center">
+          <p className="text-3xl font-bold text-primary">{totalOrders}</p>
+          <p className="text-sm text-secondary-light">Total de Pedidos</p>
+        </div>
+        <div className="bg-white rounded-2xl p-6 shadow-warm text-center">
+          <p className="text-3xl font-bold text-accent-green">R$ {totalRevenue.toFixed(2)}</p>
+          <p className="text-sm text-secondary-light">Faturamento</p>
+        </div>
+        <div className="bg-white rounded-2xl p-6 shadow-warm text-center">
+          <p className="text-3xl font-bold text-accent-blue">{completedOrders}</p>
+          <p className="text-sm text-secondary-light">Finalizados</p>
+        </div>
+        <div className="bg-white rounded-2xl p-6 shadow-warm text-center">
+          <p className="text-3xl font-bold text-yellow-500">{pendingOrders + preparingOrders}</p>
+          <p className="text-sm text-secondary-light">Em Andamento</p>
+        </div>
+      </div>
+
+      {/* Marmitas por Tamanho */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-lg font-outfit font-semibold text-secondary mb-4">Marmitas Vendidas por Tamanho</h3>
+        <div className="grid grid-cols-3 gap-4">
+          <div className="bg-green-50 rounded-xl p-4 text-center">
+            <p className="text-2xl font-bold text-accent-green">{marmitasBySize.P}</p>
+            <p className="text-sm text-secondary">Tamanho P</p>
+          </div>
+          <div className="bg-blue-50 rounded-xl p-4 text-center">
+            <p className="text-2xl font-bold text-accent-blue">{marmitasBySize.M}</p>
+            <p className="text-sm text-secondary">Tamanho M</p>
+          </div>
+          <div className="bg-orange-50 rounded-xl p-4 text-center">
+            <p className="text-2xl font-bold text-primary">{marmitasBySize.G}</p>
+            <p className="text-sm text-secondary">Tamanho G</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Vendas por Atendente */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-lg font-outfit font-semibold text-secondary mb-4">Vendas por Atendente</h3>
+        {Object.keys(salesByAttendant).length === 0 ? (
+          <p className="text-center text-secondary-light py-4">Nenhuma venda neste dia</p>
+        ) : (
+          <div className="space-y-2">
+            {Object.entries(salesByAttendant).map(([name, data]) => (
+              <div key={name} className="flex items-center justify-between p-4 bg-orange-50 rounded-xl">
+                <div>
+                  <p className="font-semibold text-secondary">{name}</p>
+                  <p className="text-sm text-secondary-light">{data.count} pedido(s)</p>
+                </div>
+                <p className="text-lg font-bold text-primary">R$ {data.total.toFixed(2)}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Lista de Pedidos do Dia */}
+      <div className="bg-white rounded-2xl p-6 shadow-warm">
+        <h3 className="text-lg font-outfit font-semibold text-secondary mb-4">Pedidos do Dia ({filteredOrders.length})</h3>
+        {filteredOrders.length === 0 ? (
+          <p className="text-center text-secondary-light py-8">Nenhum pedido neste dia</p>
+        ) : (
+          <div className="space-y-3 max-h-96 overflow-y-auto">
+            {filteredOrders.map((order) => (
+              <div key={order.id} className="border border-orange-100 rounded-xl p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-3">
+                    <span className="font-mono font-bold text-primary">#{order.order_number}</span>
+                    <span className="font-semibold text-secondary">{order.customer_name}</span>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      order.status === "completed" ? "bg-green-100 text-green-700" :
+                      order.status === "preparing" ? "bg-yellow-100 text-yellow-700" :
+                      "bg-orange-100 text-orange-700"
+                    }`}>
+                      {order.status === "completed" ? "Finalizado" : 
+                       order.status === "preparing" ? "Preparando" : "Pendente"}
+                    </span>
+                  </div>
+                  <span className="text-lg font-bold text-primary">R$ {(order.total_price || 0).toFixed(2)}</span>
+                </div>
+                <div className="text-sm text-secondary-light">
+                  <span>{order.order_type}</span>
+                  <span className="mx-2">|</span>
+                  <span>{(order.items || []).length} marmita(s)</span>
+                  <span className="mx-2">|</span>
+                  <span>{new Date(order.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
+                  <span className="mx-2">|</span>
+                  <span>Atendente: {order.attendant_name}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

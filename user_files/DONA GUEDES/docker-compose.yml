@@ -1,0 +1,46 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: donaaguedes_mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: "dona_guedes_db"
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: donaaguedes_backend
+    restart: always
+    ports:
+      - "8001:8001"
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_URL: "mongodb://mongodb:27017"
+      DB_NAME: "dona_guedes_db"
+      CORS_ORIGINS: "*"
+    volumes:
+      - ./backend:/app/backend
+    working_dir: /app/backend
+    command: uvicorn server:app --host 0.0.0.0 --port 8001
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: donaaguedes_frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      REACT_APP_BACKEND_URL: "http://localhost:8001"
+
+volumes:
+  mongodb_data:

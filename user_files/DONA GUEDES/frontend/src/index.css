@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #FFF8F0;
+}
+
+@layer base {
+  :root {
+    --background: 28 50% 98%;
+    --foreground: 14 20% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 14 20% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 14 20% 15%;
+    --primary: 28 100% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 14 30% 29%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 28 30% 95%;
+    --muted-foreground: 14 15% 50%;
+    --accent: 28 50% 90%;
+    --accent-foreground: 14 20% 15%;
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 28 30% 89%;
+    --input: 28 30% 89%;
+    --ring: 28 100% 48%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .shadow-warm {
+    box-shadow: 0 4px 14px 0 rgba(245, 124, 0, 0.15);
+  }
+  .shadow-floating {
+    box-shadow: 0 10px 30px -10px rgba(93, 64, 55, 0.2);
+  }
+}
