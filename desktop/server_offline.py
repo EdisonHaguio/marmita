@@ -427,6 +427,15 @@ def update_order_status(order_id: str, update: OrderStatusUpdate):
     conn.close()
     return {"message": "Status atualizado"}
 
+@api_router.patch("/orders/{order_id}/status")
+def patch_order_status(order_id: str, update: OrderStatusUpdate):
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE orders SET status = ? WHERE id = ?", (update.status, order_id))
+    conn.commit()
+    conn.close()
+    return {"message": "Status atualizado"}
+
 @api_router.get("/orders/{order_id}/receipt")
 def get_order_receipt(order_id: str):
     conn = get_db()
